@@ -2,6 +2,10 @@
 Secure ESP8266 MQTT Client
 version 00.01
 
+Author:  Warren Taylor
+Created: 2018-12-30
+Copyright (c) 2018-2019 Warren Taylor
+
 ----------
  Features:
 ----------
@@ -9,47 +13,36 @@ MQTT
 OTA firmware revision
 8 Relay Module controller
 
-Warren Taylor
-2018-12-30
-
 --------
  Notes:
 --------
-  screen /dev/ttyUSB0 115200
-  clean   ctrl-A C
-  quit -- ctrl-A k
-       or ctrl-A \
+screen /dev/ttyUSB0 115200
+clean   ctrl-A C
+quit -- ctrl-A k
+     or ctrl-A \
 
-  openssl genrsa -out private.key 2048
-  openssl rsa -in private.key -outform PEM -pubout -out public.key
+openssl genrsa -out private.key 2048
+openssl rsa -in private.key -outform PEM -pubout -out public.key
 
-  ~/bin/arduino-1.8.8/arduino  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
-  ~/bin/arduino-1.8.8/arduino  --verify  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
-  ~/bin/arduino-1.8.8/arduino  --upload  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
+~/bin/arduino-1.8.8/arduino  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
+~/bin/arduino-1.8.8/arduino  --verify  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
+~/bin/arduino-1.8.8/arduino  --upload  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
 */
 
 #define MAJOR_VER "00"
 #define MINOR_VER "01"
 
 #include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
-#include <WiFiUdp.h>
-#include <ArduinoOTA.h>
+//#include <ESP8266mDNS.h>
+//#include <WiFiUdp.h>
+//#include <ArduinoOTA.h>
 #include <PubSubClient.h>
 #include <SPI.h>
 #include "AsyncWait.h"
 #include "globals.h"
+#include "SetupWifiAndOTA.h"
 #include "Zones.h"
 
-//TODO: implement secure credintials as a runtime config file
-//      rather than a header file.
-#include "/home/wtaylor/private/Secure_ESP8266_MQTT/secure_credentials.h"
-//#include "secure_credentials.h"
-
-const char* ssid = STASSID;
-const char* password = STAPSK;
-const char* mqtt_server = MQTTSRV;
-//IPAddress broker(192,168,1,1); // IP address of your MQTT broker
 
 const char *ID = "sec_mqtt_client_" MAJOR_VER "_" MINOR_VER;  // Name of our device, must be unique
 const String TOPIC_ZONE_ON("irrigation/zone/on");
@@ -59,61 +52,61 @@ const String TOPIC_ZONE_STATUS("irrigation/zone/status");
 
 // TODO: Use Metaprogramming to automate the zone indexing.
 static ZoneStatus zoneArray[] {
-  ZoneStatus(0), ZoneStatus(1), ZoneStatus(2), ZoneStatus(3),
-  ZoneStatus(4), ZoneStatus(5), ZoneStatus(6), ZoneStatus(7)
+    ZoneStatus(0), ZoneStatus(1), ZoneStatus(2), ZoneStatus(3),
+    ZoneStatus(4), ZoneStatus(5), ZoneStatus(6), ZoneStatus(7)
 };
 
 static Zones zones( zoneArray, sizeof(zoneArray)/sizeof(zoneArray[0]) );
-static WiFiClient wifiClient;
 static PubSubClient pubsubClient(wifiClient);
 
 // SPI setup.
 const int slaveSelectPin = 16;
 static SPISettings spiZoneSettings(2000000, MSBFIRST, SPI_MODE0);
 
+
 void updateRelays(uint8_t bitmap) {
-  // A low output value energizes the relay.
-  // A high value turns off the relay.
-  // So invert each bit.
-  bitmap ^= 0xFF;
+    // A low output value energizes the relay.
+    // A high value turns off the relay.
+    // So invert each bit.
+    bitmap ^= 0xFF;
 
-  DEBUG_LOG("updateRelays: ");
-  DEBUG_LOGLN(String(bitmap, BIN));
+    DEBUG_LOG("updateRelays: ");
+    DEBUG_LOGLN(String(bitmap, BIN));
 
-  SPI.beginTransaction(spiZoneSettings);
-  digitalWrite(slaveSelectPin, LOW);
-  SPI.transfer(bitmap);
-  digitalWrite(slaveSelectPin, HIGH);
-  SPI.endTransaction();
+    SPI.beginTransaction(spiZoneSettings);
+    digitalWrite(slaveSelectPin, LOW);
+    SPI.transfer(bitmap);
+    digitalWrite(slaveSelectPin, HIGH);
+    SPI.endTransaction();
 }
 
 
 // Handle incomming messages from the broker
 void callback(char* topic, byte* payload, unsigned int length) {
-  String topicStr;
-  String payloadStr;
+    String topicStr;
+    String payloadStr;
 
-  for (int i = 0; topic[i]; i++) {
-    topicStr += topic[i];
-  }
+    for (int i = 0; topic[i]; i++) {
+        topicStr += topic[i];
+    }
 
-  for (int i = 0; i < length; i++) {
-    payloadStr += (char)payload[i];
-  }
+    for (int i = 0; i < length; i++) {
+        payloadStr += (char)payload[i];
+    }
 
-  DEBUG_LOGLN("");
-  DEBUG_LOG("Message arrived - [");
-  DEBUG_LOG(topicStr);
-  DEBUG_LOG("] ");
-  DEBUG_LOGLN(payloadStr);
+    DEBUG_LOGLN("");
+    DEBUG_LOG("Message arrived - [");
+    DEBUG_LOG(topicStr);
+    DEBUG_LOG("] ");
+    DEBUG_LOGLN(payloadStr);
 
-  if (topicStr == TOPIC_ZONE_ON) {
-    callbackZoneOn(topicStr, payloadStr);
-  } else if (topicStr == TOPIC_ZONE_OFF) {
-    callbackZoneOff(topicStr, payloadStr);
-  } else if (topicStr == TOPIC_ZONE_STATUS) {
-    callbackZoneStatus(topicStr, payloadStr);
-  }
+    if (topicStr == TOPIC_ZONE_ON) {
+        callbackZoneOn(topicStr, payloadStr);
+    } else if (topicStr == TOPIC_ZONE_OFF) {
+        callbackZoneOff(topicStr, payloadStr);
+    } else if (topicStr == TOPIC_ZONE_STATUS) {
+        callbackZoneStatus(topicStr, payloadStr);
+    }
 }
 
 
@@ -157,137 +150,36 @@ void callbackZoneOn(const String &topicStr, const String &payloadStr) {
 
 
 void callbackZoneOff(const String &topicStr, const String &payloadStr) {
-  MilliSec currentMilliSec = millis();
-  //TODO: if needed.
+    MilliSec currentMilliSec = millis();
+    //TODO: if needed.
 }
 
 
 void callbackZoneStatus(const String &topicStr, const String &payloadStr) {
-  MilliSec currentMilliSec = millis();
-  //TODO: if needed.
+    MilliSec currentMilliSec = millis();
+    //TODO: if needed.
 }
 
 
 /****
 void process_response(String &response, byte pin, const char *state_topic) {
-  if(response == "on")
-  {
-    digitalWrite(pin, HIGH);
-    pubsubClient.publish(state_topic,"on");
-    //DEBUG_LOG(pin);
-    //DEBUG_LOG("=HIGH, ");
-    //DEBUG_LOG(state_topic);
-    //DEBUG_LOGLN("=on");
-  }
-  else if(response == "off")  // Turn the light off
-  {
-    digitalWrite(pin, LOW);
-    pubsubClient.publish(state_topic,"off");
-    //DEBUG_LOG(pin);
-    //DEBUG_LOG("=LOW, ");
-    //DEBUG_LOG(state_topic);
-    //DEBUG_LOGLN("=off");
-  }
+    if(response == "on") {
+        digitalWrite(pin, HIGH);
+        pubsubClient.publish(state_topic,"on");
+        //DEBUG_LOG(pin);
+        //DEBUG_LOG("=HIGH, ");
+        //DEBUG_LOG(state_topic);
+        //DEBUG_LOGLN("=on");
+    } else if(response == "off") { // Turn the light off
+        digitalWrite(pin, LOW);
+        pubsubClient.publish(state_topic,"off");
+        //DEBUG_LOG(pin);
+        //DEBUG_LOG("=LOW, ");
+        //DEBUG_LOG(state_topic);
+        //DEBUG_LOGLN("=off");
+    }
 }
 ****/
-
-
-String getMacAddress() {
-  byte mac[6];
-  String macStr;
-
-  WiFi.macAddress(mac);
-  macStr = String(mac[0], HEX) + ":"
-         + String(mac[1], HEX) + ":"
-         + String(mac[2], HEX) + ":"
-         + String(mac[3], HEX) + ":"
-         + String(mac[4], HEX) + ":"
-         + String(mac[5], HEX);
-  
-  return macStr;
-}
-
-
-// Connect to WiFi network and check for OTA firmware update.
-void setupWifiAndOTA() {
-  DEBUG_LOGLN("");
-  DEBUG_LOG("MAC ");
-  DEBUG_LOGLN(getMacAddress());
-  DEBUG_LOG("Connecting to ");
-  DEBUG_LOGLN(ssid);
-
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    DEBUG_LOGLN("Connection Failed! Rebooting...");
-    delay(5000);
-    ESP.restart();
-  }
-  DEBUG_LOGLN("");
-  DEBUG_LOGLN("WiFi connected");
-  DEBUG_LOG("IP ");
-  DEBUG_LOG(WiFi.localIP());
-  //DEBUG_LOG(", MAC ");
-  //DEBUG_LOG(getMacAddress());
-  DEBUG_LOGLN("");
-  randomSeed(micros());
-
-  // Port defaults to 8266
-  // ArduinoOTA.setPort(8266);
-
-  // Hostname defaults to esp8266-[ChipID]
-  // ArduinoOTA.setHostname("myesp8266");
-
-  // No authentication by default
-  // ArduinoOTA.setPassword((const char *)"123");
-
-  // Password can be set with it's md5 value as well
-  // MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
-  // ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
-
-  ArduinoOTA.onStart([]() {
-    String type;
-    if (ArduinoOTA.getCommand() == U_FLASH) {
-      type = "sketch";
-    } else { // U_SPIFFS
-      type = "filesystem";
-    }
-    // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-    DEBUG_LOGLN("OTA: Start updating " + type);
-  });
-
-  ArduinoOTA.onEnd([]() {
-    DEBUG_LOGLN("\nOTA: End");
-  });
-
-  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-    DEBUG_LOGF("Progress: %u%%\r", (progress / (total / 100)));
-  });
-
-  ArduinoOTA.onError([](ota_error_t error) {
-    DEBUG_LOGLN("");
-    DEBUG_LOGLN("------------------------------------------------------");
-    DEBUG_LOGF("Error[%u]: ", error);
-    if (error == OTA_AUTH_ERROR) {
-      DEBUG_LOGLN("Auth Failed");
-    } else if (error == OTA_BEGIN_ERROR) {
-      DEBUG_LOGLN("Begin Failed");
-    } else if (error == OTA_CONNECT_ERROR) {
-      DEBUG_LOGLN("Connect Failed");
-    } else if (error == OTA_RECEIVE_ERROR) {
-      DEBUG_LOGLN("Receive Failed");
-    } else if (error == OTA_END_ERROR) {
-      DEBUG_LOGLN("End Failed");
-    }
-    DEBUG_LOGLN("------------------------------------------------------");
-    DEBUG_LOGLN("");
-  });
-  
-  ArduinoOTA.begin();
-  DEBUG_LOGLN("Ready.");
-  //DEBUG_LOG("IP address: ");
-  //DEBUG_LOGLN(WiFi.localIP());
-}
 
 
 // Reconnect to the MQTT client.
@@ -378,7 +270,7 @@ void startupTest(MilliSec currentMilliSec) {
 
 
 void loop() {
-  ArduinoOTA.handle();
+  loopWifiAndOTA();
 
   /***/
   if (!pubsubClient.connected()) {

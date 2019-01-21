@@ -2,7 +2,7 @@
     Secure Credentials
 */
 
-#ifdef _SECURE_CREDENTIALS_H_
+#ifndef _SECURE_CREDENTIALS_H_
 #define _SECURE_CREDENTIALS_H_
 
 
