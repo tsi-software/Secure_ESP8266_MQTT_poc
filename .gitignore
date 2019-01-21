@@ -30,3 +30,38 @@
 *.exe
 *.out
 *.app
+*.hex
+
+# Tmp Backups.
+*.css~
+*.bak
+*.BAK
+*.odt#
+*.err
+*.ERR
+.directory
+.DS_Store
+._.DS_Store
+.~lock.*
+
+# Exclude directories
+/production/
+/target/
+/dist/
+/build/
+/Dont-Backup/
+bin/
+gen/
+tmp/
+temp/
+__history/
+del-me
+archives/*.zip
+.metadata
+.history
+#
+# Specific Files.
+#
+Copy (*) of *.*
+Copy of *.*
+Thumbs.db
