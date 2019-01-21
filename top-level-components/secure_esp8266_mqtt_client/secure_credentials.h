@@ -9,7 +9,6 @@
 #ifndef STASSID
 #define STASSID "your-ssid"
 #define STAPSK  "your-ssid-password"
-#define MQTTSRV "your-mqtt-server"
 #endif
 
 

@@ -10,15 +10,27 @@ Copyright (c) 2019 Warren Taylor
 #define _SetupWifiAndOTA_H_
 
 
-extern const char* mqtt_server;
+class SetupWifiAndOTA {
+public:
+    SetupWifiAndOTA() : ssid("STASSID"), password("STAPSK") { }
+    virtual ~SetupWifiAndOTA() { }
 
+    String getMacAddress();
+    void setupWifiAndOTA();
+    void loopWifiAndOTA();
 
-extern WiFiClient wifiClient;
+    WiFiClient & getWiFiClient() {
+        return wifiClient;
+    }
 
+private:
+    const char* ssid;
+    const char* password;
 
-extern String getMacAddress();
-extern void setupWifiAndOTA();
-extern void loopWifiAndOTA();
+    WiFiClient wifiClient;
+
+    void setClock();
+};
 
 
 #endif // _SetupWifiAndOTA_H_

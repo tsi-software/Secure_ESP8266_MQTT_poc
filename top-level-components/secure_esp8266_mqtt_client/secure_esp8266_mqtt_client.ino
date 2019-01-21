@@ -33,15 +33,18 @@ openssl rsa -in private.key -outform PEM -pubout -out public.key
 #define MINOR_VER "01"
 
 #include <ESP8266WiFi.h>
-//#include <ESP8266mDNS.h>
-//#include <WiFiUdp.h>
-//#include <ArduinoOTA.h>
 #include <PubSubClient.h>
 #include <SPI.h>
 #include "AsyncWait.h"
 #include "globals.h"
 #include "SetupWifiAndOTA.h"
 #include "Zones.h"
+
+
+SetupWifiAndOTA setupWifiAndOTA;
+
+const char* mqtt_server = "maggie";
+//IPAddress broker(192,168,1,1); // IP address of your MQTT broker
 
 
 const char *ID = "sec_mqtt_client_" MAJOR_VER "_" MINOR_VER;  // Name of our device, must be unique
@@ -57,7 +60,7 @@ static ZoneStatus zoneArray[] {
 };
 
 static Zones zones( zoneArray, sizeof(zoneArray)/sizeof(zoneArray[0]) );
-static PubSubClient pubsubClient(wifiClient);
+static PubSubClient pubsubClient(setupWifiAndOTA.getWiFiClient());
 
 // SPI setup.
 const int slaveSelectPin = 16;
@@ -223,7 +226,7 @@ void setup() {
   Serial.begin(115200); // Start serial communication at 115200 baud
   #endif
 
-  setupWifiAndOTA();
+  setupWifiAndOTA.setupWifiAndOTA();
   //pubsubClient.setServer(broker, 1883);
   pubsubClient.setServer(mqtt_server, 1883);
   pubsubClient.setCallback(callback); // Initialize the callback routine
@@ -270,7 +273,7 @@ void startupTest(MilliSec currentMilliSec) {
 
 
 void loop() {
-  loopWifiAndOTA();
+  setupWifiAndOTA.loopWifiAndOTA();
 
   /***/
   if (!pubsubClient.connected()) {

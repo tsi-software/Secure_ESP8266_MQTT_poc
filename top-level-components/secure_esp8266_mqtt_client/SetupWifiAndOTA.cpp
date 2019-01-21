@@ -7,7 +7,10 @@ Copyright (c) 2019 Warren Taylor
 */
 
 #include <ESP8266WiFi.h>
+//#include <ESP8266mDNS.h>
+//#include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include <time.h>
 #include "globals.h"
 #include "SetupWifiAndOTA.h"
 
@@ -17,15 +20,40 @@ Copyright (c) 2019 Warren Taylor
 //#include "secure_credentials.h"
 
 
-const char* ssid = STASSID;
-const char* password = STAPSK;
-const char* mqtt_server = MQTTSRV;
-//IPAddress broker(192,168,1,1); // IP address of your MQTT broker
-
-WiFiClient wifiClient;
+//void SetupWifiAndOTA::SetupWifiAndOTA() : ssid(STASSID), password(STAPSK) {
+//    //bool timeIsSet = false;
+//}
 
 
-String getMacAddress() {
+// Set time via NTP, as required for x.509 validation
+void SetupWifiAndOTA::setClock() {
+    //timeIsSet = false;
+
+    //void configTime(int timezone, int daylightOffset_sec, const char* server1, const char* server2, const char* server3)
+    //https://github.com/esp8266/Arduino/blob/master/cores/esp8266/time.c
+    configTime(-8 * 3600, 0, "pool.ntp.org", "time.nist.gov", "time.windows.com");
+
+    // Asynchronously wait for network response.
+
+    /**
+    Serial.print("Waiting for NTP time sync: ");
+    time_t now = time(nullptr);
+    while (now < 8 * 3600 * 2) {
+        delay(500);
+        Serial.print(".");
+        now = time(nullptr);
+    }
+    Serial.println("");
+    struct tm timeinfo;
+    gmtime_r(&now, &timeinfo);
+    Serial.print("Current time: ");
+    Serial.print(asctime(&timeinfo));
+    return now;
+    **/
+}
+
+
+String SetupWifiAndOTA::getMacAddress() {
     byte mac[6];
     String macStr;
 
@@ -42,7 +70,7 @@ String getMacAddress() {
 
 
 // Connect to WiFi network and check for OTA firmware update.
-void setupWifiAndOTA() {
+void SetupWifiAndOTA::setupWifiAndOTA() {
     DEBUG_LOGLN("");
     DEBUG_LOG("MAC ");
     DEBUG_LOGLN(getMacAddress());
@@ -124,7 +152,7 @@ void setupWifiAndOTA() {
 
 
 // Loop
-void loopWifiAndOTA() {
+void SetupWifiAndOTA::loopWifiAndOTA() {
     ArduinoOTA.handle();
 }
 
