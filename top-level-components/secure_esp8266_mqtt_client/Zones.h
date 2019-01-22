@@ -158,7 +158,8 @@ class Zones {
     bool Loop(MilliSec currentMilliSec) {
       bool changed = false;
       for (unsigned loopIndex = 0; loopIndex < numberOfZones; ++loopIndex) {
-        changed = changed || zones[loopIndex].Loop(currentMilliSec);
+        // Warning: "||" is a short-circuit operator - do not reverse the arguments.
+        changed = zones[loopIndex].Loop(currentMilliSec) || changed;
       }
       return changed;
     }
@@ -198,13 +199,15 @@ class Zones {
         //DEBUG_LOGLN("turnOffAllOthers - begin.");
         for (unsigned loopIndex = 0; loopIndex < numberOfZones; ++loopIndex) {
           if (loopIndex != zoneIndex) {
-            changed = changed || getZone(loopIndex).turnOff();
+            // Warning: "||" is a short-circuit operator - do not reverse the arguments.
+            changed = getZone(loopIndex).turnOff() || changed;
           }
         }
         //DEBUG_LOGLN("turnOffAllOthers - end.");
       }
 
-      changed = changed || getZone(zoneIndex).turnOn(duration, currentMilliSec);
+      // Warning: "||" is a short-circuit operator - do not reverse the arguments.
+      changed = getZone(zoneIndex).turnOn(duration, currentMilliSec) || changed;
 
       return changed;
     }

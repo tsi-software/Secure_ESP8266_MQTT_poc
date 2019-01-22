@@ -123,41 +123,43 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 
 void callbackZoneOn(const String &topicStr, const String &payloadStr) {
-  MilliSec currentMilliSec = millis();
+    MilliSec currentMilliSec = millis();
 
-  // Payload in "[Zone-Index] [Duration-in-seconds]"
-  String buffer(payloadStr);
-  String zoneIndexStr;
-  String durationStr;
-  buffer.trim();
-  int delimIndex = buffer.indexOf(' ');
-  if (delimIndex < 0) {
-    // Delimeter not found! Leave 'durationStr' empty.
-    zoneIndexStr = buffer;
-  } else {
-    zoneIndexStr = buffer.substring(0, delimIndex);
-    durationStr = buffer.substring(delimIndex + 1);
-  }
+    // Payload in "[Zone-Index] [Duration-in-seconds]"
+    String buffer(payloadStr);
+    String zoneIndexStr;
+    String durationStr;
+    buffer.trim();
+    int delimIndex = buffer.indexOf(' ');
+    if (delimIndex < 0) {
+        // Delimeter not found! Leave 'durationStr' empty.
+        zoneIndexStr = buffer;
+    } else {
+        zoneIndexStr = buffer.substring(0, delimIndex);
+        durationStr = buffer.substring(delimIndex + 1);
+    }
 
-  if (zoneIndexStr.length() <= 0 || durationStr.length() <= 0) {
-    // Invalid Payload:
-    DEBUG_LOGLN("Invalid Payload! zoneIndexStr=" + zoneIndexStr + ", durationStr=" + durationStr);
-    return;
-  }
+    if (zoneIndexStr.length() <= 0 || durationStr.length() <= 0) {
+        // Invalid Payload:
+        DEBUG_LOGLN("Invalid Payload! zoneIndexStr=" + zoneIndexStr + ", durationStr=" + durationStr);
+        return;
+    }
 
-  unsigned zoneIndex = (unsigned)zoneIndexStr.toInt();
-  int duration = durationStr.toInt();
-  if (duration < 0)  { duration = 0; }
+    unsigned zoneIndex = (unsigned)zoneIndexStr.toInt();
+    int duration = durationStr.toInt();
+    if (duration < 0) {
+        duration = 0;
+    }
 
-  bool changed = false;
-  if (duration > 0) {
-    changed = zones.turnOn(zoneIndex, (unsigned)duration, currentMilliSec);
-  } else {
-    changed = zones.turnOff(zoneIndex);
-  }
-  if (changed) {
-    updateRelays(zones.asBitMap8());
-  }
+    bool changed = false;
+    if (duration > 0) {
+        changed = zones.turnOn(zoneIndex, (unsigned)duration, currentMilliSec);
+    } else {
+        changed = zones.turnOff(zoneIndex);
+    }
+    if (changed) {
+        updateRelays(zones.asBitMap8());
+    }
 }
 
 
