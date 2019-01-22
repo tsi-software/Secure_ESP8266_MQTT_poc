@@ -6,7 +6,7 @@ It is important to use different certificate subject parameters for your CA, ser
 **When prompted for the CN (Common Name), enter your server's hostname.**
 Create 'mosquitto' user if it does not already exist.
 * sudo useradd -M mosquitto
-​* sudo usermod -L mosquitto
+* sudo usermod -L mosquitto
 
 ### Create an X509 CA certificate.
 ```bash
@@ -19,6 +19,7 @@ openssl req -new -x509 -days 365 -extensions v3_ca -keyout mosq_ca.key -out mosq
 > * OU — Organization Unit
 > * CN — Common Name (eg: the main domain the certificate should cover)
 > * emailAddress — main administrative point of contact for the certificate
+
 *Also, enter and remember your PEM Pass Phrase*
 
 ### Create the MQTT server certificate and private key.
