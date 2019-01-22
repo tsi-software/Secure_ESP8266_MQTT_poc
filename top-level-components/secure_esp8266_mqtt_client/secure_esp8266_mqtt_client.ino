@@ -41,7 +41,16 @@ openssl rsa -in private.key -outform PEM -pubout -out public.key
 #include "Zones.h"
 
 
-SetupWifiAndOTA setupWifiAndOTA;
+//TODO: implement secure credintials as a runtime config file
+//      rather than a header file.
+#include "/home/wtaylor/private/Secure_ESP8266_MQTT/secure_credentials.h"
+//#include "secure_credentials.h"
+
+SetupWifiAndOTA setupWifiAndOTA(
+    STASSID, STAPSK,
+    CA_CERT_PROG, CLIENT_CERT_PROG, CLIENT_KEY_PROG
+);
+
 
 const char* mqtt_server = "maggie";
 //IPAddress broker(192,168,1,1); // IP address of your MQTT broker
@@ -228,7 +237,7 @@ void setup() {
 
   setupWifiAndOTA.setupWifiAndOTA();
   //pubsubClient.setServer(broker, 1883);
-  pubsubClient.setServer(mqtt_server, 1883);
+  pubsubClient.setServer(mqtt_server, 8883);
   pubsubClient.setCallback(callback); // Initialize the callback routine
   zones.Setup();
 
@@ -273,28 +282,33 @@ void startupTest(MilliSec currentMilliSec) {
 
 
 void loop() {
-  setupWifiAndOTA.loopWifiAndOTA();
-
-  /***/
-  if (!pubsubClient.connected()) {
-    // Reconnect if connection is lost.
-    MilliSec currentMilliSec = millis();
-    reconnectToMQTT(currentMilliSec);
-  }
-  pubsubClient.loop();
-  /***/
-
-  { // App code.
-    MilliSec currentMilliSec = millis();
-
-    #ifdef DEBUG
-    startupTest(currentMilliSec);
-    #endif
-
-    bool zonesChanged = zones.Loop(currentMilliSec);
-    if (zonesChanged) {
-      updateRelays(zones.asBitMap8());
+    setupWifiAndOTA.loopWifiAndOTA();
+    if (!setupWifiAndOTA.isReadyForProcessing()) {
+        // The WiFi is not ready yet so
+        // don't do any further processing.
+        return;
     }
-  }
+
+    /***/
+    if (!pubsubClient.connected()) {
+        // Reconnect if connection is lost.
+        MilliSec currentMilliSec = millis();
+        reconnectToMQTT(currentMilliSec);
+    }
+    pubsubClient.loop();
+    /***/
+
+    { // App code.
+        MilliSec currentMilliSec = millis();
+
+        #ifdef DEBUG
+        startupTest(currentMilliSec);
+        #endif
+
+        bool zonesChanged = zones.Loop(currentMilliSec);
+        if (zonesChanged) {
+            updateRelays(zones.asBitMap8());
+        }
+    }
 
 }
