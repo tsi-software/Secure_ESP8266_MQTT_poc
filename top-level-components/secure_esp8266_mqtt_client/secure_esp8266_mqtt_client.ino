@@ -21,12 +21,20 @@ clean   ctrl-A C
 quit -- ctrl-A k
      or ctrl-A \
 
+------------------------------------
+ For encrypted OTA firmware updates
+------------------------------------
 openssl genrsa -out private.key 2048
 openssl rsa -in private.key -outform PEM -pubout -out public.key
 
+------------------------
+ CLI compile and upload
+------------------------
 ~/bin/arduino-1.8.8/arduino  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
 ~/bin/arduino-1.8.8/arduino  --verify  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
 ~/bin/arduino-1.8.8/arduino  --upload  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
+
+~/bin/arduino-1.8.8/arduino --verbose --upload secure_esp8266_mqtt_client.ino
 */
 
 #define MAJOR_VER "00"

@@ -100,6 +100,7 @@ void SetupWifiAndOTA::setupWifiAndOTA() {
 
     setClock();
 
+    //TODO: improve security of OTA firmware updates.
     // Port defaults to 8266
     // ArduinoOTA.setPort(8266);
 

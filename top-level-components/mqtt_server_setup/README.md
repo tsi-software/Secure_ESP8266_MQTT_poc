@@ -50,6 +50,18 @@ openssl req -out mosq_client.csr -key mosq_client.key -new -subj "/C=CA/ST=BC/L=
 openssl x509 -req -in mosq_client.csr -CA mosq_ca.crt -CAkey mosq_ca.key -CAcreateserial -out mosq_client.crt -days 365
 ```
 
+## Mosquitto server config
+**/etc/mosquitto/mosquitto.conf**
+```
+port 8883
+cafile /etc/mosquitto/mosq_ca.crt
+keyfile /etc/mosquitto/mosq_serv.key
+certfile /etc/mosquitto/mosq_serv.crt
+protocol mqtt
+tls_version tlsv1.2
+require_certificate true
+```
+
 ## MQTT Server References
 * <https://manpages.debian.org/stretch/mosquitto/mosquitto-tls.7.en.html>
 * <https://manpages.debian.org/stretch/mosquitto/mosquitto_passwd.1.en.html>

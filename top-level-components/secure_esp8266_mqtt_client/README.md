@@ -5,3 +5,7 @@
 <https://github.com/esp8266/Arduino/blob/master/doc/esp8266wifi/bearssl-client-secure-class.rst>
 <https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi/examples>
 <https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/src/WiFiClientSecureBearSSL.h>
+
+# Linux - Secure MQTT Client Certificate setup
+
+# Android - Secure MQTT Client Certificate setup
