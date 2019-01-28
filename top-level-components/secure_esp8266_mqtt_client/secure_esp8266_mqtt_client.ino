@@ -60,7 +60,7 @@ SetupWifiAndOTA setupWifiAndOTA(
 );
 
 
-const char* mqtt_server = "maggie";
+const char* mqtt_server = MQTT_SERVER;
 //IPAddress broker(192,168,1,1); // IP address of your MQTT broker
 
 
@@ -82,6 +82,9 @@ static PubSubClient pubsubClient(setupWifiAndOTA.getWiFiClient());
 // SPI setup.
 const int slaveSelectPin = 16;
 static SPISettings spiZoneSettings(2000000, MSBFIRST, SPI_MODE0);
+
+// For Future Use.
+const int programResetPin = 2;
 
 
 void updateRelays(uint8_t bitmap) {
@@ -241,6 +244,10 @@ void reconnectToMQTT(MilliSec currentMilliSec) {
 
 
 void setup() {
+  // Set programResetPin to high impedance and default its value to HIGH.
+  pinMode(programResetPin, INPUT);
+  digitalWrite(programResetPin, HIGH);
+
   #ifdef DEBUG
   Serial.begin(115200); // Start serial communication at 115200 baud
   #endif

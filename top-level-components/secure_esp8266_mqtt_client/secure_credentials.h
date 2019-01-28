@@ -9,6 +9,8 @@
 const char *STASSID = "your-ssid";
 const char *STAPSK = "your-ssid-password";
 
+const char* MQTT_SERVER = "your-mqtt-server";
+
 const char CA_CERT_PROG[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
 ... your certificate goes here ...
