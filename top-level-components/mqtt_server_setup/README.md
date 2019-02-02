@@ -1,4 +1,11 @@
-# Secure MQTT Server setup
+# MQTT Broker secure setup
+Here are the basics of how to install, configure, and secure the MQTT Broker named “Mosquitto” on an already properly configured and running installation of OpenWRT <https://openwrt.org/>.
+The MQTT Broker can run on computer on a local area network (LAN). You could even run it on a Raspberry PI if performance isn’t a strict requirement. So the following instruction should be adaptable to most modern operating systems.
+
+## Install Mosquitto
+```bash
+opkg install mosquitto-ssl mosquitto-client-ssl libmosquitto-ssl
+```
 
 ## Creating the MQTT Server Certificate
 Create a directory to store all Mosquitto certificates.
