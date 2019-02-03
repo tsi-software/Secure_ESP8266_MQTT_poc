@@ -1,5 +1,5 @@
 # MQTT Broker secure setup
-Here are the basics of how to install, configure, and secure the “Mosquitto” MQTT Broker on an already properly configured and running installation of OpenWRT <https://openwrt.org/>. However, the MQTT Broker can run on any computer on a local area network (LAN). You could even run it on a Raspberry PI if performance isn’t a strict requirement. So the following instruction should be adaptable to most modern operating systems.
+Here are the basics of how to install, configure, and secure the “Mosquitto” MQTT Broker on an already properly configured and running installation of [OpenWRT](https://openwrt.org/). However, the MQTT Broker can run on any computer on a local area network (LAN). You could even run it on a Raspberry PI if performance isn’t a strict requirement. So the following instruction should be adaptable to most modern operating systems.
 
 With ssh (or similar) log into you OpenWRT router.
 
@@ -27,15 +27,15 @@ If you don't know you hostname then run something like: uci show system
 ```bash
 openssl req -new -x509 -days 365 -extensions v3_ca -keyout mosq_ca.key -out mosq_ca.crt -subj "/C=CA/ST=BC/L=**your-city**/O=**ca.your-domain.com**/OU=ca/CN=**your-hostname**/emailAddress=**your@email.com**"
 ```
-> * C — Country
-> * ST — State
-> * L — City
-> * O — Organization
-> * OU — Organization Unit
-> * CN — Common Name (eg: the main domain the certificate should cover)
-> * emailAddress — main administrative point of contact for the certificate
+* C — Country
+* ST — State
+* L — City
+* O — Organization
+* OU — Organization Unit
+* CN — Common Name (eg: the main domain the certificate should cover)
+* emailAddress — main administrative point of contact for the certificate
 
-*Also, enter and remember your PEM Pass Phrase*
+*Also, enter and securely remember your PEM Pass Phrase.*
 
 ### Create the MQTT server certificate and private key.
 ```bash
