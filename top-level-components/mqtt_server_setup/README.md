@@ -1,68 +1,83 @@
 # MQTT Broker secure setup
 Here are the basics of how to install, configure, and secure the “Mosquitto” MQTT Broker on an already properly configured and running installation of [OpenWRT](https://openwrt.org/). However, the MQTT Broker can run on any computer on a local area network (LAN). You could even run it on a Raspberry PI if performance isn’t a strict requirement. So the following instruction should be adaptable to most modern operating systems.
 
-With ssh (or similar) log into you OpenWRT router.
-
-## Install Mosquitto
+## Install Mosquitto Broker and Client
+With ssh (or similar) log into your OpenWRT router.
 ```bash
 opkg install mosquitto-ssl mosquitto-client-ssl libmosquitto-ssl
 ```
 
-## Creating the MQTT Server Certificate
-Create 'mosquitto' user if it does not already exist.
-* useradd -M mosquitto
-* usermod -L mosquitto
+## Create "mosquitto" user if it does not already exist
+```bash
+useradd -M mosquitto
+usermod -L mosquitto
+```
 
-Create a directory to store all Mosquitto certificates.
-* mkdir /root/mosquitto
-* chmod go-rwx /root/mosquitto
-* chown mosquitto:mosquitto /root/mosquitto
-* cd /root/mosquitto
+## Create a directory to securely hold your certificates
+*(Keys and Certificates can be generate on any computer as long as the required files are securely copied to the server and all keys are securely stored.)*
+```bash
+mkdir /root/mosquitto
+chmod go-rwx /root/mosquitto
+chown mosquitto:mosquitto /root/mosquitto
+cd /root/mosquitto
+```
 
+## Creating the MQTT Keys and Certificates
 It is important to use different certificate subject parameters for your CA, server and clients.
 **When prompted for the CN (Common Name), enter your server's hostname.**
-If you don't know you hostname then run something like: uci show system
+If you don't know your exact hostname then run something like: uci show system
 
-### Create an X509 CA certificate.
+### Create an X509 CA key and certificate for self-signing
+*(Determine and securely store a PEM Pass Phrase, which is used to protect your CA Key)*
 ```bash
 openssl req -new -x509 -days 365 -extensions v3_ca -keyout mosq_ca.key -out mosq_ca.crt -subj "/C=CA/ST=BC/L=**your-city**/O=**ca.your-domain.com**/OU=ca/CN=**your-hostname**/emailAddress=**your@email.com**"
 ```
-* C — Country
-* ST — State
-* L — City
-* O — Organization
-* OU — Organization Unit
-* CN — Common Name (eg: the main domain the certificate should cover)
-* emailAddress — main administrative point of contact for the certificate
+Subject Parameters:
+* C - Country
+* ST - State
+* L - City
+* O - Organization
+* OU - Organization Unit
+* CN - Common Name (eg: the main domain the certificate should cover)
+* emailAddress - main administrative point of contact for the certificate
 
-*Also, enter and securely remember your PEM Pass Phrase.*
+To verify:
+```bash
+openssl x509 -in mosq_ca.crt -noout -text
+```
 
-### Create the MQTT server certificate and private key.
+### Generate the MQTT Server private key
 ```bash
 openssl genrsa -out mosq_serv.key 2048
 ```
-### Create a self-signed server certificate.
+### Generate the MQTT Server self-signed certificate
 ```bash
-openssl req -new -key mosq_serv.key -out mosq_serv.csr -subj "/C=CA/ST=BC/L=**your-city**/O=**server.your-domain.com**/OU=server/CN=**your-hostname**/emailAddress=**your@email.com**"
+openssl req -new -key mosq_serv.key -out mosq_serv.csr -subj "/C=**your-country**/ST=**your-state**/L=**your-city**/O=**server.your-domain.com**/OU=server/CN=**your-hostname**/emailAddress=**your@email.com**"
 ```
-### Create the certificate to use in the MQTT Mosquitto Server.
+### Generate the CA signed certificate to use in the MQTT Mosquitto Server
 ```bash
 openssl x509 -req -in mosq_serv.csr -CA mosq_ca.crt -CAkey mosq_ca.key -CAcreateserial -out mosq_serv.crt -days 365
 ```
 
-### Generate a client key.
+### Generate the MQTT Client private key
 ```bash
 openssl genrsa -out mosq_client.key 2048
 ```
 
-### Generate a certificate signing request to send to the CA.
+### Generate the MQTT Client self-signed certificate
 ```bash
-openssl req -out mosq_client.csr -key mosq_client.key -new -subj "/C=CA/ST=BC/L=**your-city**/O=**client.your-domain.com**/OU=client/CN=**your-hostname**/emailAddress=**your@email.com**"
+openssl req -new -key mosq_client.key -out mosq_client.csr -subj "/C=**your-country**/ST=**your-state**/L=**your-city**/O=**client.your-domain.com**/OU=client/CN=**your-hostname**/emailAddress=**your@email.com**"
 ```
 
-### Sign the CSR with your CA key, or send it to the CA:
+### Generate the CA signed certificate to use in the MQTT Client
 ```bash
 openssl x509 -req -in mosq_client.csr -CA mosq_ca.crt -CAkey mosq_ca.key -CAcreateserial -out mosq_client.crt -days 365
+```
+
+### Increase the security of the files just created
+```bash
+chmod go-rwx /root/mosquitto/*
+chown mosquitto:mosquitto /root/mosquitto/*
 ```
 
 ## Mosquitto server config
@@ -75,6 +90,26 @@ certfile /etc/mosquitto/mosq_serv.crt
 protocol mqtt
 tls_version tlsv1.2
 require_certificate true
+```
+
+### Copy the necessary certificates and key
+```bash
+cp /root/mosquitto/mosq_ca.crt   /etc/mosquitto/mosq_ca.crt
+cp /root/mosquitto/mosq_serv.key /etc/mosquitto/mosq_serv.key
+cp /root/mosquitto/mosq_serv.crt /etc/mosquitto/mosq_serv.crt
+```
+
+## Restart the Mosquitto Broker
+```bash
+service mosquitto stop
+service mosquitto start
+```
+
+## Run a quick test
+The following command should not cause anything to happen.
+Debug any errors that occur.
+```bash
+mosquitto_pub -h **your-hostname** -p 8883 --cafile mosq_ca.crt --debug --topic test/1 -m test
 ```
 
 ## MQTT Server References
