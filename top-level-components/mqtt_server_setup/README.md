@@ -30,7 +30,7 @@ If you don't know your exact hostname then run something like: uci show system
 ### Create an X509 CA key and certificate for self-signing
 *(Determine and securely store a PEM Pass Phrase, which is used to protect your CA Key)*
 ```bash
-openssl req -new -x509 -days 365 -extensions v3_ca -keyout mosq_ca.key -out mosq_ca.crt -subj "/C=CA/ST=BC/L=**your-city**/O=**ca.your-domain.com**/OU=ca/CN=**your-hostname**/emailAddress=**your@email.com**"
+openssl req -new -x509 -days 365 -extensions v3_ca -keyout mosq_ca.key -out mosq_ca.crt -subj "/C=CA/ST=BC/L=your-city/O=ca.your-domain.com/OU=ca/CN=your-hostname/emailAddress=your@email.com"
 ```
 Subject Parameters:
 * C - Country
@@ -52,7 +52,7 @@ openssl genrsa -out mosq_serv.key 2048
 ```
 ### Generate the MQTT Server self-signed certificate
 ```bash
-openssl req -new -key mosq_serv.key -out mosq_serv.csr -subj "/C=**your-country**/ST=**your-state**/L=**your-city**/O=**server.your-domain.com**/OU=server/CN=**your-hostname**/emailAddress=**your@email.com**"
+openssl req -new -key mosq_serv.key -out mosq_serv.csr -subj "/C=your-country/ST=your-state/L=your-city/O=server.your-domain.com/OU=server/CN=your-hostname/emailAddress=your@email.com"
 ```
 ### Generate the CA signed certificate to use in the MQTT Mosquitto Server
 ```bash
@@ -66,7 +66,7 @@ openssl genrsa -out mosq_client.key 2048
 
 ### Generate the MQTT Client self-signed certificate
 ```bash
-openssl req -new -key mosq_client.key -out mosq_client.csr -subj "/C=**your-country**/ST=**your-state**/L=**your-city**/O=**client.your-domain.com**/OU=client/CN=**your-hostname**/emailAddress=**your@email.com**"
+openssl req -new -key mosq_client.key -out mosq_client.csr -subj "/C=your-country/ST=your-state/L=your-city/O=client.your-domain.com/OU=client/CN=your-hostname/emailAddress=your@email.com"
 ```
 
 ### Generate the CA signed certificate to use in the MQTT Client
@@ -109,7 +109,7 @@ service mosquitto start
 The following command should not cause anything to happen.
 Debug any errors that occur.
 ```bash
-mosquitto_pub -h **your-hostname** -p 8883 --cafile mosq_ca.crt --debug --topic test/1 -m test
+mosquitto_pub -h your-hostname -p 8883 --cafile mosq_ca.crt --debug --topic test/1 -m test
 ```
 
 ## MQTT Server References
