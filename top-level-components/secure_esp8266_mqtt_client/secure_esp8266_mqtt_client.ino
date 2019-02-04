@@ -10,8 +10,10 @@ Copyright (c) 2018-2019 Warren Taylor
  Features:
 ----------
 MQTT
-OTA firmware revision
 8 Relay Module controller
+
+Future:
+OTA firmware revision
 
 --------
  Notes:
@@ -20,12 +22,6 @@ screen /dev/ttyUSB0 115200
 clean   ctrl-A C
 quit -- ctrl-A k
      or ctrl-A \
-
-------------------------------------
- For encrypted OTA firmware updates
-------------------------------------
-openssl genrsa -out private.key 2048
-openssl rsa -in private.key -outform PEM -pubout -out public.key
 
 ------------------------
  CLI compile and upload
@@ -45,7 +41,7 @@ openssl rsa -in private.key -outform PEM -pubout -out public.key
 #include <SPI.h>
 #include "AsyncWait.h"
 #include "globals.h"
-#include "SetupWifiAndOTA.h"
+#include "SetupWifi.h"
 #include "Zones.h"
 
 
@@ -54,7 +50,7 @@ openssl rsa -in private.key -outform PEM -pubout -out public.key
 #include "/home/wtaylor/private/Secure_ESP8266_MQTT/secure_credentials.h"
 //#include "secure_credentials.h"
 
-SetupWifiAndOTA setupWifiAndOTA(
+SetupWifi setupWifi(
     STASSID, STAPSK,
     CA_CERT_PROG, CLIENT_CERT_PROG, CLIENT_KEY_PROG
 );
@@ -77,7 +73,7 @@ static ZoneStatus zoneArray[] {
 };
 
 static Zones zones( zoneArray, sizeof(zoneArray)/sizeof(zoneArray[0]) );
-static PubSubClient pubsubClient(setupWifiAndOTA.getWiFiClient());
+static PubSubClient pubsubClient(setupWifi.getWiFiClient());
 
 // SPI setup.
 const int slaveSelectPin = 16;
@@ -252,7 +248,7 @@ void setup() {
   Serial.begin(115200); // Start serial communication at 115200 baud
   #endif
 
-  setupWifiAndOTA.setupWifiAndOTA();
+  setupWifi.setupWifi();
   //pubsubClient.setServer(broker, 1883);
   pubsubClient.setServer(mqtt_server, 8883);
   pubsubClient.setCallback(callback); // Initialize the callback routine
@@ -299,8 +295,8 @@ void startupTest(MilliSec currentMilliSec) {
 
 
 void loop() {
-    setupWifiAndOTA.loopWifiAndOTA();
-    if (!setupWifiAndOTA.isReadyForProcessing()) {
+    setupWifi.loopWifi();
+    if (!setupWifi.isReadyForProcessing()) {
         // The WiFi is not ready yet so
         // don't do any further processing.
         return;

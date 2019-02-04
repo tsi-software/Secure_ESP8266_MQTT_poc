@@ -1,22 +1,22 @@
 /*
-SetupWifiAndOTA.h
+SetupWifi.h
 
 Author:  Warren Taylor
 Created: 2019-01-21
 Copyright (c) 2019 Warren Taylor
 */
 
-#ifndef _SetupWifiAndOTA_H_
-#define _SetupWifiAndOTA_H_
+#ifndef _SetupWifi_H_
+#define _SetupWifi_H_
 
 
 #include <ESP8266WiFi.h>
 #include "AsyncWait.h"
 
 
-class SetupWifiAndOTA {
+class SetupWifi {
 public:
-    SetupWifiAndOTA(
+    SetupWifi(
         const char *ssid_,
         const char *password_,
         const char *ca_cert_PROG_,
@@ -40,7 +40,7 @@ public:
         wifiClient.setClientRSACert(&x509ClientCert, &PrivateClientKey);
     }
 
-    virtual ~SetupWifiAndOTA() { }
+    virtual ~SetupWifi() { }
 
     WiFiClient & getWiFiClient() {
         return wifiClient;
@@ -51,8 +51,8 @@ public:
     }
 
     String getMacAddress();
-    void setupWifiAndOTA();
-    void loopWifiAndOTA();
+    void setupWifi();
+    void loopWifi();
 
 private:
     const char *ssid;
@@ -80,4 +80,4 @@ private:
 };
 
 
-#endif // _SetupWifiAndOTA_H_
+#endif // _SetupWifi_H_
