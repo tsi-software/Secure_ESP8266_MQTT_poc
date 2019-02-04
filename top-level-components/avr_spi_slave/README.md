@@ -28,7 +28,7 @@ Then, from this "avr_spi_slave" directory, run:
 make program_fuses
 make program
 ```
-Note: "make program_fuses" only needs to be run once.
+Note: "make program_fuses" only needs to be run once, not each time the source file changes.
 
 ## AVR References
 <http://ediy.com.my/index.php/projects/item/86-minimal-arduino-with-8mhz-internal-clock>
