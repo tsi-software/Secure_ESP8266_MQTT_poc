@@ -16,7 +16,7 @@ Why? Because I didn't know how easy native AVR programming was until I tried it.
 * avr-gcc
 * AVR ISP (In-System Programming) device
 
-## Wireing up the AVR
+## Wiring up the AVR
 I’m going to defer to two other web sites that do an excellent job of describing how to wire-up and program the AVR.
 * <http://ediy.com.my/index.php/projects/item/86-minimal-arduino-with-8mhz-internal-clock> 
 * <http://www.ladyada.net/learn/avr/index.html> 

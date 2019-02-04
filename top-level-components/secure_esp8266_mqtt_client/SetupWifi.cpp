@@ -3,7 +3,7 @@ SetupWifi.cpp
 
 Author:  Warren Taylor
 Created: 2019-01-21
-Copyright (c) 2019 Warren Taylor
+Copyright (c) 2019 Warren Taylor.  All right reserved.
 */
 
 #include <ESP8266WiFi.h>
