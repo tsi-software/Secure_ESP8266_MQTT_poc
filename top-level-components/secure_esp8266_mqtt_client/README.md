@@ -39,7 +39,7 @@ which are very important in order to prevent old and possibly compromised certif
 ### secure_credentials.h
 This file contains a copy of the required certificates and keys that were generated when
 [Creating the MQTT Keys and Certificates](https://github.com/tsi-software/Secure_ESP8266_MQTT_poc/tree/master/top-level-components/mqtt_server_setup#creating-the-mqtt-keys-and-certificates)
-> Storing credentials in source code in considered insecure and considered bad practice! One of the main reasons for this is because source code that is committed to your revision control system becomes openly accessible (the opposite of secure).
+> Storing credentials in source code in considered both insecure and bad practice! One of the main reasons for this is because source code that is committed to your revision control system becomes openly accessible (the opposite of secure).
 In a subsequent version of this project "secure_credentials.h" will be removed and
 replaced with a method of securely injecting credentials into the target devices.
 
@@ -47,13 +47,16 @@ replaced with a method of securely injecting credentials into the target devices
 AsyncWait.h is code that is independent of security but still worth mentioning here.
 One of my prime directives is to never write blocking code (code that waits for something to happen but also prevents any other code from executing).
 AsyncWait allows me to write code in one place that waits for a duration of time but still allows the main loop() to continue processing.
-I think I could write an entirely separate blog on this topic alone.
+I think I may write an entirely separate blog on this topic.
 
 ### Zones.h
 This is application level code, which is independent of security and, therefore, not discussed here.
 
 ### globals.h
 This is application level code, which is independent of security and, therefore, not discussed here.
+
+### Schematics
+![Schematics](Secure_ESP8266_MQTT_schematics.png)
 
 ## Future Features
 
@@ -70,9 +73,6 @@ To Do ...
 <https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi/examples>
 <https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/src/WiFiClientSecureBearSSL.h>
 <https://pubsubclient.knolleary.net/>
-
-# Linux - Secure MQTT Client Certificate setup
-To Do ...
 
 # Android - Secure MQTT Client Certificate setup
 To Do ...

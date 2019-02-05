@@ -111,7 +111,7 @@ service mosquitto start
 The following command should not cause anything to happen.
 Debug any errors that occur.
 ```bash
-mosquitto_pub -h your-hostname -p 8883 --cafile mosq_ca.crt --debug --topic test/1 -m test
+mosquitto_pub -h your-hostname -p 8883 --cafile mosq_ca.crt --cert mosq_serv.crt --key mosq_serv.key --debug --topic test/1 -m test
 ```
 
 ## MQTT Server References
