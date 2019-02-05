@@ -1,8 +1,9 @@
 /*
  * Zones.h
  *
- *  Created on: 2018-12-30
- *      Author: Warren Taylor
+ * Author:  Warren Taylor
+ * Created: 2018-12-30
+ * Copyright (c) 2018-2019 Warren Taylor.  All right reserved.
  */
 
 #ifndef ZONES_H_

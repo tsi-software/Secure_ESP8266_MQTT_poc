@@ -4,7 +4,7 @@ version 00.01
 
 Author:  Warren Taylor
 Created: 2018-12-30
-Copyright (c) 2018-2019 Warren Taylor
+Copyright (c) 2018-2019 Warren Taylor.  All right reserved.
 
 ----------
  Features:
