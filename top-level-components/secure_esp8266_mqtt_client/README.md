@@ -18,7 +18,7 @@ In the near future, Secure OTA will be implemented differently in order to coexi
 ## Source Files
 
 ### secure_esp8266_mqtt_client.ino
-Here is the top level application source code that:
+This is the top level application source code that:
 * Connects to the WAP (Wireless Access Point - a.k.a. Wifi Router).
 * Securely connects to the MQTT Broker.
 * Subscribes to the desired MQTT topics.
@@ -27,26 +27,33 @@ Here is the top level application source code that:
 * Configures and manages communications over SPI (Serial Peripheral Interface) with connected ATmega168.
 
 ### SetupWifi.cpp and SetupWifi.h
-The **SetupWifi** class handles the security and encapsulates the arduino-esp8266 **BearSSL::WiFiClientSecure** object.
-This class holds the ssid and password of the Wifi Router and implements the code to connect to this router.
-This class also holds the ca_cert, client_cert, and client_key used to make a secure connection using the **BearSSL::WiFiClientSecure** class, which were generated when
+This **SetupWifi** class handles the security and encapsulates the arduino-esp8266 **BearSSL::WiFiClientSecure** object.
+This class holds the ssid and password of the Wifi Router and implements the code to connect to that router.
+This class also holds the ca_cert, client_cert, and client_key used to make secure connections using the **BearSSL::WiFiClientSecure** class.
+These certificates and keys were generated when
 [Creating the MQTT Keys and Certificates](https://github.com/tsi-software/Secure_ESP8266_MQTT_poc/tree/master/top-level-components/mqtt_server_setup#creating-the-mqtt-keys-and-certificates)
-More on these certs and keys in a moment.
 Another detail handled by this class, that is not at first obvious, is accurately setting the ESP8266 clock.
-This is needed because security certificates can, and should, have an expiry date.
-Expiry dates are important to prevent old and possibly compromised certificates from being reused.
+This is needed because security certificates can, and should, have an expiry date,
+which are very important in order to prevent old and possibly compromised certificates from being reused.
 
 ### secure_credentials.h
-To Do ...
+This file contains a copy of the required certificates and keys that were generated when
+[Creating the MQTT Keys and Certificates](https://github.com/tsi-software/Secure_ESP8266_MQTT_poc/tree/master/top-level-components/mqtt_server_setup#creating-the-mqtt-keys-and-certificates)
+> Storing credentials in source code in considered insecure and considered bad practice! One of the main reasons for this is because source code that is committed to your revision control system becomes openly accessible (the opposite of secure).
+In a subsequent version of this project "secure_credentials.h" will be removed and
+replaced with a method of securely injecting credentials into the target devices.
 
 ### AsyncWait.h
-To Do ...
+AsyncWait.h is code that is independent of security but still worth mentioning here.
+One of my prime directives is to never write blocking code (code that waits for something to happen but also prevents any other code from executing).
+AsyncWait allows me to write code in one place that waits for a duration of time but still allows the main loop() to continue processing.
+I think I could write an entirely separate blog on this topic alone.
 
 ### Zones.h
-This is application level code and is independent of security.
+This is application level code, which is independent of security and, therefore, not discussed here.
 
 ### globals.h
-To Do ...
+This is application level code, which is independent of security and, therefore, not discussed here.
 
 ## Future Features
 
