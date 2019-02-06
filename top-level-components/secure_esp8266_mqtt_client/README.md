@@ -56,7 +56,7 @@ This is application level code, which is independent of security and, therefore,
 This is application level code, which is independent of security and, therefore, not discussed here.
 
 ### Schematics
-![Schematics](eagle_cad/Secure_ESP8266_MQTT_schematics.png)
+![Schematics](./eagle_cad/Secure_ESP8266_MQTT_schematics.png)
 
 ## Future Features
 
