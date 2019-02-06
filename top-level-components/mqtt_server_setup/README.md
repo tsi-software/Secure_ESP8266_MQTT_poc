@@ -124,10 +124,10 @@ service mosquitto start
 ```
 
 ## Run a quick test
-The following command should not cause anything to happen.
-Debug any errors that occur.
+The following command should turn on zone 2 for 2 minutes (i.e. 120 seconds).
+Try running it now, even if the MQTT client has not yet been setup, in order to check for any errors that may occur on the server side.
 ```bash
-mosquitto_pub -h your-hostname -p 8883 --cafile mosq_ca.crt --cert mosq_serv.crt --key mosq_serv.key --debug --topic test/1 -m test
+mosquitto_pub -h your-hostname -p 8883 --cafile mosq_ca.crt --cert mosq_serv.crt --key mosq_serv.key --debug --topic irrigation/zone/on -m "2 120"
 ```
 
 ## MQTT Server References

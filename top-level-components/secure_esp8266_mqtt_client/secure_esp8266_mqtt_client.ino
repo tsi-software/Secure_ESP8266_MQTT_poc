@@ -2,10 +2,6 @@
 Secure ESP8266 MQTT Client
 version 00.01
 
-Author:  Warren Taylor
-Created: 2018-12-30
-Copyright (c) 2018-2019 Warren Taylor.  All right reserved.
-
 ----------
  Features:
 ----------
@@ -80,7 +76,8 @@ const int slaveSelectPin = 16;
 static SPISettings spiZoneSettings(2000000, MSBFIRST, SPI_MODE0);
 
 // For Future Use.
-const int programResetPin = 2;
+const int programResetPin = 4;
+const int spiRxRequestPin = 5;
 
 
 void updateRelays(uint8_t bitmap) {
@@ -302,14 +299,12 @@ void loop() {
         return;
     }
 
-    /***/
     if (!pubsubClient.connected()) {
         // Reconnect if connection is lost.
         MilliSec currentMilliSec = millis();
         reconnectToMQTT(currentMilliSec);
     }
     pubsubClient.loop();
-    /***/
 
     { // App code.
         MilliSec currentMilliSec = millis();
@@ -323,5 +318,4 @@ void loop() {
             updateRelays(zones.asBitMap8());
         }
     }
-
 }
