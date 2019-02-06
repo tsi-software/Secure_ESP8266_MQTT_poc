@@ -3,6 +3,10 @@
 
 Here are the basics of how to install, configure, and secure the “Mosquitto” MQTT Broker on an already properly configured and running installation of [OpenWRT](https://openwrt.org/). However, the MQTT Broker can run on any computer on a local area network (LAN). You could even run it on a Raspberry PI if performance isn’t a strict requirement. So the following instruction should be adaptable to most modern operating systems.
 
+## Disclaimer
+The following documentation in no way guarantees a secure system.
+*See [LICENSE](../../LICENSE).*
+
 ## Install Mosquitto Broker and Client
 With ssh (or similar) log into your OpenWRT router.
 ```bash
@@ -26,20 +30,13 @@ cd /root/mosquitto
 
 ## Creating the MQTT Keys and Certificates
 The documentation below talks a lot about Keys, Certificates, Certificate Authorities, etc...
-Rather than trying to rewrite the very good documentation that others have already put a lot of effort into 
-
-what others have already written on this topic 
-
-
+Rather than trying to rewrite the very good documentation others have already put a great deal of effort into, I refer you to some of their work:
 * [SSL and SSL Certificates Explained For Beginners](http://www.steves-internet-guide.com/ssl-certificates-explained/)
 * [Introduction to MQTT Security Mechanisms](http://www.steves-internet-guide.com/mqtt-security-mechanisms/)
 * [Mosquitto SSL Configuration -MQTT TLS Security](http://www.steves-internet-guide.com/mosquitto-tls/)
 * [Securing a Mosquitto Server](https://dzone.com/articles/mqtt-security-securing-a-mosquitto-server)
 
-
-
-
-It is important to use different subject parameters for your CA, server and client certificates, which are described below.
+When generating your credentials it is important to use different subject parameters for your CA, server and client certificates.
 **Every time you are prompted for the CN (Common Name), enter your same server hostname.**
 If you don't know your exact hostname then run something like:
 > uci show system

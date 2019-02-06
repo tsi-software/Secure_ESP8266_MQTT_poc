@@ -1,6 +1,10 @@
 # AVR SPI Slave
 *Copyright (c) 2019 Warren Taylor.  All right reserved.*
 
+## Disclaimer
+The following documentation in no way guarantees a secure system.
+*See [LICENSE](../../LICENSE).*
+
 ## Overview
 The original plan was to connect peripherals directly to the ESP8266 data pins but I ran out of pins very quickly. Since I had an unused ATmega168 lying around I though "what the heck" and connected the two chips via SPI with the ESP8266 as the master and the ATmega as the slave. In additions to providing a larger number of data pins this scheme also provided 5v tolerance.
 

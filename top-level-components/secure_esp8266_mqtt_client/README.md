@@ -5,6 +5,10 @@ There are many tutorials on how to program the ESP8266 as an MQTT Client using t
 
 > This project uses the [ESP8266 Arduino Core](https://arduino-esp8266.readthedocs.io/) library and board specifications.
 
+## Disclaimer
+The following documentation in no way guarantees a secure system.
+*See [LICENSE](../../LICENSE).*
+
 ## Security First
 At a high level of abstraction secure connections for ESP8266 devices are straight forward when using the arduino-esp8266 **BearSSL::WiFiClientSecure** class.
 This is because the **BearSSL::WiFiClientSecure** class extends from the insecure arduino-esp8266 **WiFiClient** class.

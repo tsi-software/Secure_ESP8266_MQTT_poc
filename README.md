@@ -6,7 +6,7 @@ If you’re a first timer this project probably isn’t for you.
 
 ## Disclaimer
 The following documentation in no way guarantees a secure system.
-*see [LICENSE](LICENSE)*
+*See [LICENSE](LICENSE).*
 
 ## Features
 - MQTT Publish/Subscribe Messaging secured using TLS 1.2
