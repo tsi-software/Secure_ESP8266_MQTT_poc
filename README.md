@@ -4,6 +4,10 @@
 There are many in depth and well documented ESP8266 MQTT tutorials out there. This in not one of them. This is a brief proof of concept where “security first” is the focus, rather than an afterthought. The goal of this project is to have a documented and working **secure** MQTT Broker and Client, which can be used as a reference for later projects.
 If you’re a first timer this project probably isn’t for you.
 
+## Disclaimer
+The following documentation in no way guarantees a secure system.
+*see [LICENSE](LICENSE)*
+
 ## Features
 - MQTT Publish/Subscribe Messaging secured using TLS 1.2
 - OTA (Over-the-air) Client firmware updates.

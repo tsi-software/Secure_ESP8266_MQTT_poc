@@ -25,9 +25,24 @@ cd /root/mosquitto
 ```
 
 ## Creating the MQTT Keys and Certificates
-It is important to use different certificate subject parameters for your CA, server and clients.
-**When prompted for the CN (Common Name), enter your server's hostname.**
-If you don't know your exact hostname then run something like: uci show system
+The documentation below talks a lot about Keys, Certificates, Certificate Authorities, etc...
+Rather than trying to rewrite the very good documentation that others have already put a lot of effort into 
+
+what others have already written on this topic 
+
+
+* [SSL and SSL Certificates Explained For Beginners](http://www.steves-internet-guide.com/ssl-certificates-explained/)
+* [Introduction to MQTT Security Mechanisms](http://www.steves-internet-guide.com/mqtt-security-mechanisms/)
+* [Mosquitto SSL Configuration -MQTT TLS Security](http://www.steves-internet-guide.com/mosquitto-tls/)
+* [Securing a Mosquitto Server](https://dzone.com/articles/mqtt-security-securing-a-mosquitto-server)
+
+
+
+
+It is important to use different subject parameters for your CA, server and client certificates, which are described below.
+**Every time you are prompted for the CN (Common Name), enter your same server hostname.**
+If you don't know your exact hostname then run something like:
+> uci show system
 
 ### Create an X509 CA key and certificate for self-signing
 *(Determine and securely store a PEM Pass Phrase, which is used to protect your CA Key)*
