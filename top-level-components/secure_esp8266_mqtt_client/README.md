@@ -31,14 +31,14 @@ This **SetupWifi** class handles the security and encapsulates the arduino-esp82
 This class holds the ssid and password of the Wifi Router and implements the code to connect to that router.
 This class also holds the ca_cert, client_cert, and client_key used to make secure connections using the **BearSSL::WiFiClientSecure** class.
 These certificates and keys were generated when
-[Creating the MQTT Keys and Certificates](https://github.com/tsi-software/Secure_ESP8266_MQTT_poc/tree/master/top-level-components/mqtt_server_setup#creating-the-mqtt-keys-and-certificates)
+[Creating the MQTT Keys and Certificates](../mqtt_server_setup#creating-the-mqtt-keys-and-certificates)
 Another detail handled by this class, that is not at first obvious, is accurately setting the ESP8266 clock.
 This is needed because security certificates can, and should, have an expiry date,
 which are very important in order to prevent old and possibly compromised certificates from being reused.
 
 ### secure_credentials.h
 This file contains a copy of the required certificates and keys that were generated when
-[Creating the MQTT Keys and Certificates](https://github.com/tsi-software/Secure_ESP8266_MQTT_poc/tree/master/top-level-components/mqtt_server_setup#creating-the-mqtt-keys-and-certificates)
+[Creating the MQTT Keys and Certificates](../mqtt_server_setup#creating-the-mqtt-keys-and-certificates)
 > Storing credentials in source code in considered both insecure and bad practice! One of the main reasons for this is because source code that is committed to your revision control system becomes openly accessible (the opposite of secure).
 In a subsequent version of this project "secure_credentials.h" will be removed and
 replaced with a method of securely injecting credentials into the target devices.
