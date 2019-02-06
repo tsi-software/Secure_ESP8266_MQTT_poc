@@ -1,5 +1,5 @@
 # MQTT Broker secure setup
-*Copyright (c) 2019 Warren Taylor.  All right reserved.*
+*Copyright (c) 2019 Warren Taylor.*
 
 Here are the basics of how to install, configure, and secure the “Mosquitto” MQTT Broker on an already properly configured and running installation of [OpenWRT](https://openwrt.org/). However, the MQTT Broker can run on any computer on a local area network (LAN). You could even run it on a Raspberry PI if performance isn’t a strict requirement. So the following instruction should be adaptable to most modern operating systems.
 
@@ -36,10 +36,14 @@ Rather than trying to rewrite the very good documentation others have already pu
 * [Mosquitto SSL Configuration -MQTT TLS Security](http://www.steves-internet-guide.com/mosquitto-tls/)
 * [Securing a Mosquitto Server](https://dzone.com/articles/mqtt-security-securing-a-mosquitto-server)
 
-When generating your credentials it is important to use different subject parameters for your CA, server and client certificates.
+**NEVER** use the same key and certificate to secure more than one device.
+If one device becomes compromised then all devices secured with the same key and certificate are also compromised.<br>
+When generating your credentials it is important to use different subject parameters for your CA, server and client certificates.<br>
 **Every time you are prompted for the CN (Common Name), enter your same server hostname.**
 If you don't know your exact hostname then run something like:
-> uci show system
+```bash
+uci show system
+```
 
 ### Create an X509 CA key and certificate for self-signing
 *(Determine and securely store a PEM Pass Phrase, which is used to protect your CA Key)*

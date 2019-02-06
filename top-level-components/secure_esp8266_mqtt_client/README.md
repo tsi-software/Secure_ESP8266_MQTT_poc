@@ -1,5 +1,5 @@
 # Secure ESP8266 MQTT Client
-*Copyright (c) 2019 Warren Taylor.  All right reserved.*
+*Copyright (c) 2019 Warren Taylor.*
 
 There are many tutorials on how to program the ESP8266 as an MQTT Client using the Arduino libraries. But it's hard to find a single source clearly describing how to program the ESP8266 as a **secure** MQTT Client. As a long time software engineer I know how important security is these days.
 
@@ -59,16 +59,14 @@ This is application level code, which is independent of security and, therefore,
 ### globals.h
 This is application level code, which is independent of security and, therefore, not discussed here.
 
-### Schematics
+### Hardware Schematics
 ![Schematics](eagle_cad/Secure_ESP8266_MQTT_schematics.png)
 
 ## Future Features
-
-### ESP8266 OTA
-To Do ...
-
-### AVR SPI Slave OTA
-To Do ...
+### OTA (Over-the-Air) Updates
+Future versions of this ESP8266 MQTT Client will have secure OTA updates enabled.
+The **ESP8266** will be updated in a manner similar to that of the ArduinoOTA code but instead using the existing secure MQTT connection in order to keep memory use minimal.
+The **AVR SPI Slave** will be updated over-the-air by using the ESP8266 as an AVR ISP (In-System Programming) device. Again using the existing secure MQTT connection in order to keep memory use minimal.
 
 ## MQTT Client References
 * <https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html>
