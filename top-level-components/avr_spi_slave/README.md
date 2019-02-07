@@ -36,15 +36,13 @@ make program
 Note: "make program_fuses" only needs to be run once, not each time the source file changes.
 
 ## AVR References
-<http://ediy.com.my/index.php/projects/item/86-minimal-arduino-with-8mhz-internal-clock>
-<http://www.ladyada.net/learn/avr/index.html>
-<https://en.wikipedia.org/wiki/AVR_microcontrollers>
-
-<https://www.arduino.cc/en/Tutorial/ArduinoISP>
-<https://www.arduino.cc/en/Main.ArduinoISP>
-
-<http://maxembedded.com/2015/06/setting-up-avr-gcc-toolchain-on-linux-and-mac-os-x/>
-<https://www.microchip.com/mplab/avr-support/avr-and-arm-toolchains-c-compilers>
-<https://gcc.gnu.org/wiki/avr-gcc>
-<https://www.nongnu.org/avr-libc/>
-<http://www.engbedded.com/fusecalc/>
+* <http://ediy.com.my/index.php/projects/item/86-minimal-arduino-with-8mhz-internal-clock>
+* <http://www.ladyada.net/learn/avr/index.html>
+* <https://en.wikipedia.org/wiki/AVR_microcontrollers>
+* <https://www.arduino.cc/en/Tutorial/ArduinoISP>
+* <https://www.arduino.cc/en/Main.ArduinoISP>
+* <http://maxembedded.com/2015/06/setting-up-avr-gcc-toolchain-on-linux-and-mac-os-x/>
+* <https://www.microchip.com/mplab/avr-support/avr-and-arm-toolchains-c-compilers>
+* <https://gcc.gnu.org/wiki/avr-gcc>
+* <https://www.nongnu.org/avr-libc/>
+* <http://www.engbedded.com/fusecalc/>

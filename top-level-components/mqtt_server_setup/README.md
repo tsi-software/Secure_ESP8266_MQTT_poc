@@ -10,6 +10,7 @@ The following documentation in no way guarantees a secure system.
 ## Install Mosquitto Broker and Client
 With ssh (or similar) log into your OpenWRT router.
 ```bash
+ssh root@your-router-hostname
 opkg install mosquitto-ssl mosquitto-client-ssl libmosquitto-ssl
 ```
 
