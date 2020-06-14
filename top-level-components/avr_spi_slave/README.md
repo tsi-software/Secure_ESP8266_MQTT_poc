@@ -1,5 +1,5 @@
 # AVR SPI Slave
-*Copyright (c) 2019 Warren Taylor.*
+*Copyright (c) 2019-2020 Warren Taylor.*
 
 ## Disclaimer
 The following documentation in no way guarantees a secure system.

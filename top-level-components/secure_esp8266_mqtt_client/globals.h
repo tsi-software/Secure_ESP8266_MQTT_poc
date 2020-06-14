@@ -3,7 +3,7 @@
  *
  * Author:  Warren Taylor
  * Created: 2018-12-30
- * Copyright (c) 2018-2019 Warren Taylor.  All right reserved.
+ * Copyright (c) 2018-2020 Warren Taylor.  All right reserved.
  */
 
 #ifndef GLOBALS_H_

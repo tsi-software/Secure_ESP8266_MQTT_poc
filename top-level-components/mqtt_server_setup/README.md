@@ -1,5 +1,5 @@
 # MQTT Broker secure setup
-*Copyright (c) 2019 Warren Taylor.*
+*Copyright (c) 2019-2020 Warren Taylor.*
 
 Here are the basics of how to install, configure, and secure the “Mosquitto” MQTT Broker on an already properly configured and running installation of [OpenWRT](https://openwrt.org/). However, the MQTT Broker can run on any computer on a local area network (LAN). You could even run it on a Raspberry PI if performance isn’t a strict requirement. So the following instruction should be adaptable to most modern operating systems.
 

@@ -1,5 +1,5 @@
 # Secure ESP8266 MQTT Client
-*Copyright (c) 2019 Warren Taylor.*
+*Copyright (c) 2019-2020 Warren Taylor.*
 
 There are many tutorials on how to program the ESP8266 as an MQTT Client using the Arduino libraries. But it's hard to find a single source clearly describing how to program the ESP8266 as a **secure** MQTT Client. As a long time software engineer I know how important security is these days.
 
@@ -17,7 +17,7 @@ Once the secure initialization is done the remaining code is implemented mostly 
 
 ## ArduinoOTA
 The ArduinoOTA library was initially used but later removed from this code because there did not appear to be sufficient resources in the ESP8266 to have a secure connection open by both the MQTT Broker and ArduinoOTA at the same time.
-In the near future, Secure OTA will be implemented differently in order to coexist with Secure MQTT.
+In the future, Secure OTA will be implemented differently in order to coexist with Secure MQTT.
 
 ## Source Files
 
@@ -28,7 +28,7 @@ This is the top level application source code that:
 * Subscribes to the desired MQTT topics.
 * Handles incoming MQTT messages.
 * Controls ESP8266 Chip Level Data Pins.
-* Configures and manages communications over SPI (Serial Peripheral Interface) with connected ATmega168.
+* Configures and manages communications over SPI (Serial Peripheral Interface) to a connected ATmega168. An ATmega168 is used because it has 5V tolerant pins.
 
 ### SetupWifi.cpp and SetupWifi.h
 This **SetupWifi** class handles the security and encapsulates the arduino-esp8266 **BearSSL::WiFiClientSecure** object.
@@ -38,7 +38,9 @@ These certificates and keys were generated when
 [Creating the MQTT Keys and Certificates](../mqtt_server_setup#creating-the-mqtt-keys-and-certificates).
 Another detail handled by this class, that is not at first obvious, is accurately setting the ESP8266 clock.
 This is needed because security certificates can, and should, have an expiry date,
-which are very important in order to prevent old and possibly compromised certificates from being reused.
+which is very important in order to prevent old and possibly compromised certificates from being reused.
+Additionally, UTC (a.k.a. Zulu time) is the internal standard used throughout this project both for consistency
+and to avoid potential errors arising from differing time zones and daylight savings time.
 
 ### secure_credentials.h
 This file contains a copy of the required certificates and keys that were generated when

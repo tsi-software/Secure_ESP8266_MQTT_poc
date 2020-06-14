@@ -1,6 +1,10 @@
 /****
 Secure ESP8266 MQTT Client
-version 00.01
+version 00.02
+
+Author:  Warren Taylor
+Created: 2018-12-30
+Copyright (c) 2018-2020 Warren Taylor.  All right reserved.
 
 ----------
  Features:
@@ -30,7 +34,7 @@ quit -- ctrl-A k
 */
 
 #define MAJOR_VER "00"
-#define MINOR_VER "01"
+#define MINOR_VER "02"
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
@@ -43,8 +47,7 @@ quit -- ctrl-A k
 
 //TODO: implement secure credintials as a runtime config file
 //      rather than a header file.
-#include "/home/wtaylor/private/Secure_ESP8266_MQTT/secure_credentials.h"
-//#include "secure_credentials.h"
+#include "secure_credentials.h"
 
 SetupWifi setupWifi(
     STASSID, STAPSK,

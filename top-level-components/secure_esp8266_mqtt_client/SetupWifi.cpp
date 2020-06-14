@@ -3,7 +3,7 @@ SetupWifi.cpp
 
 Author:  Warren Taylor
 Created: 2019-01-21
-Copyright (c) 2019 Warren Taylor.  All right reserved.
+Copyright (c) 2019-2020 Warren Taylor.  All right reserved.
 */
 
 #include <ESP8266WiFi.h>
@@ -14,15 +14,14 @@ Copyright (c) 2019 Warren Taylor.  All right reserved.
 
 // Set time via NTP, as required for x.509 validation
 void SetupWifi::setClock() {
-
     //-------------------------------------------------------------------------
-    //TODO: set clock to Zulu and set timezone and daylightsavings elsewhere.
-    //      only use timezone for display purposes and data entry.
+    // UTC (a.k.a. Zulu time) is the internal standard used throughout this
+    // project both for consistency and to avoid potential errors arising from
+    // differing time zones and daylight savings time.
     //-------------------------------------------------------------------------
-
     //void configTime(int timezone, int daylightOffset_sec, const char* server1, const char* server2, const char* server3)
-    //https://github.com/esp8266/Arduino/blob/master/cores/esp8266/time.c
-    configTime(-8 * 3600, 0, "pool.ntp.org", "time.nist.gov", "time.windows.com");
+    //https://github.com/esp8266/Arduino/blob/master/cores/esp8266/time.cpp
+    configTime(0, 0, "pool.ntp.org", "time.nist.gov", "time.windows.com");
     setClock_status = STARTED;
     DEBUG_LOG("Waiting for NTP time sync: ");
     setClock_AsyncWait.startWaiting(millis(), 1000); // Log every 1 second.
@@ -105,7 +104,7 @@ void SetupWifi::setupWifi() {
 
 // Loop
 void SetupWifi::loopWifi() {
-    // Prevent ALL other actions here until the clock as been set by NTP.
+    // Prevent ALL other actions here until the clock has been set by NTP.
     if (setClock_status < FINISHED) {
         checkClockStatus();
         return;
