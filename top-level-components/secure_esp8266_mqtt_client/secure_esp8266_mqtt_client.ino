@@ -34,20 +34,23 @@ quit -- ctrl-A k
 */
 
 #define MAJOR_VER "00"
-#define MINOR_VER "02"
+#define MINOR_VER "03"
 
+#include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-#include <SPI.h>
+#include <time.h>
 #include "AsyncWait.h"
 #include "globals.h"
 #include "SetupWifi.h"
+#include "UpdateRelays.h"
 #include "Zones.h"
 
 
-//TODO: implement secure credintials as a runtime config file
+//TODO: implement secure credentials as a runtime config file
 //      rather than a header file.
-#include "secure_credentials.h"
+#include "/home/wtaylor/private/Secure_ESP8266_MQTT/secure_credentials.h"
+//#include "secure_credentials.h"
 
 SetupWifi setupWifi(
     STASSID, STAPSK,
@@ -74,31 +77,6 @@ static ZoneStatus zoneArray[] {
 static Zones zones( zoneArray, sizeof(zoneArray)/sizeof(zoneArray[0]) );
 static PubSubClient pubsubClient(setupWifi.getWiFiClient());
 
-// SPI setup.
-const int slaveSelectPin = 16;
-static SPISettings spiZoneSettings(2000000, MSBFIRST, SPI_MODE0);
-
-// For Future Use.
-const int programResetPin = 4;
-const int spiRxRequestPin = 5;
-
-
-void updateRelays(uint8_t bitmap) {
-    // A low output value energizes the relay.
-    // A high value turns off the relay.
-    // So invert each bit.
-    bitmap ^= 0xFF;
-
-    DEBUG_LOG("updateRelays: ");
-    DEBUG_LOGLN(String(bitmap, BIN));
-
-    SPI.beginTransaction(spiZoneSettings);
-    digitalWrite(slaveSelectPin, LOW);
-    SPI.transfer(bitmap);
-    digitalWrite(slaveSelectPin, HIGH);
-    SPI.endTransaction();
-}
-
 
 // Handle incomming messages from the broker
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -109,7 +87,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
         topicStr += topic[i];
     }
 
-    for (int i = 0; i < length; i++) {
+    for (unsigned int i = 0; i < length; i++) {
         payloadStr += (char)payload[i];
     }
 
@@ -165,19 +143,19 @@ void callbackZoneOn(const String &topicStr, const String &payloadStr) {
         changed = zones.turnOff(zoneIndex);
     }
     if (changed) {
-        updateRelays(zones.asBitMap8());
+        updateRelays(zones);
     }
 }
 
 
 void callbackZoneOff(const String &topicStr, const String &payloadStr) {
-    MilliSec currentMilliSec = millis();
+    //MilliSec currentMilliSec = millis();
     //TODO: if needed.
 }
 
 
 void callbackZoneStatus(const String &topicStr, const String &payloadStr) {
-    MilliSec currentMilliSec = millis();
+    //MilliSec currentMilliSec = millis();
     //TODO: if needed.
 }
 
@@ -240,10 +218,6 @@ void reconnectToMQTT(MilliSec currentMilliSec) {
 
 
 void setup() {
-  // Set programResetPin to high impedance and default its value to HIGH.
-  pinMode(programResetPin, INPUT);
-  digitalWrite(programResetPin, HIGH);
-
   #ifdef DEBUG
   Serial.begin(115200); // Start serial communication at 115200 baud
   #endif
@@ -253,12 +227,7 @@ void setup() {
   pubsubClient.setServer(mqtt_server, 8883);
   pubsubClient.setCallback(callback); // Initialize the callback routine
   zones.Setup();
-
-  // SPI Master setup.
-  // set the Slave Select Pins as outputs:
-  pinMode(slaveSelectPin, OUTPUT);
-  digitalWrite(slaveSelectPin, HIGH);
-  SPI.begin();
+  updateRelaysSetup();
 }
 
 
@@ -288,7 +257,7 @@ void startupTest(MilliSec currentMilliSec) {
   }
 
   if (changed) {
-    updateRelays(zones.asBitMap8());
+    updateRelays(zones);
   }
 }
 #endif // DEBUG
@@ -318,7 +287,7 @@ void loop() {
 
         bool zonesChanged = zones.Loop(currentMilliSec);
         if (zonesChanged) {
-            updateRelays(zones.asBitMap8());
+            updateRelays(zones);
         }
     }
 }

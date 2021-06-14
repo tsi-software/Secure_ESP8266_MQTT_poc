@@ -1,0 +1,55 @@
+------------
+ 2020-08-22
+------------
+
+-----------------------------------
+On workstation "Max" (192.168.1.70)
+-----------------------------------
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+
+sudo apt-get --with-new-pkgs upgrade
+# or 
+sudo apt-get install <list of packages kept back>
+#sudo apt-get install firefox-esr google-chrome-stable
+
+sudo apt autoremove
+
+
+$ uname -mrs
+Linux 4.9.0-6-amd64 x86_64
+
+$ hostnamectl
+   Static hostname: gonzo
+         Icon name: computer-desktop
+           Chassis: desktop
+        Machine ID: 583f9d59251944459752c3d67bd899ab
+           Boot ID: 27559770be99497d87b18a5856bf9c8f
+  Operating System: Debian GNU/Linux 9 (stretch)
+            Kernel: Linux 4.9.0-13-amd64
+      Architecture: x86-64
+
+
+sudo su -
+cd /etc/apt
+fgrep -cir --files-with-matches stretch *
+----------------
+sources.list
+sources.list.d/base.list
+----------------
+
+Edit the file /etc/apt/sources.list using a text editor and replace each instance of stretch with buster.
+vim /etc/apt/sources.list
+vim /etc/apt/sources.list.d/base.list
+
+:%s/stretch/buster/gc
+
+
+Update the packages index on Debian Linux, run:
+  sudo apt update
+Prepare for the operating system upgrade, run:
+  sudo apt upgrade
+Finally, update Debian 9 to Debian 10 buster by running:
+  sudo apt full-upgrade
+  sudo apt --purge autoremove
+Reboot the Linux system so that you can boot into Debian 10 Buster
+

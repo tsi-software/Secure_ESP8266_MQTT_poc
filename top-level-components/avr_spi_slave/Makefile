@@ -9,8 +9,13 @@ TARGET=spi_slave
 FUSE=-U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xf9:m 
 
 
+# Flash the program to the MCU.
 program : $(TARGET).hex
 	$(PROG) -c $(PRGMMR) -p m$(MEGA) -P usb -U flash:w:$(TARGET).hex
+
+# test programmer connectivity
+test_conn:
+	$(PROG) -v -c $(PRGMMR) -p m$(MEGA)
 
 program_fuses :
 	$(PROG) -c $(PRGMMR) -p m$(MEGA) -P usb -e $(FUSE)

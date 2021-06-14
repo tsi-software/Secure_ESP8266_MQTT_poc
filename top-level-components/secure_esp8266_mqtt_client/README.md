@@ -77,3 +77,43 @@ The **AVR SPI Slave** will be updated over-the-air by using the ESP8266 as an AV
 * <https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi/examples>
 * <https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/src/WiFiClientSecureBearSSL.h>
 * <https://pubsubclient.knolleary.net/>
+
+## cp210x driver
+https://askubuntu.com/questions/941594/installing-cp210x-driver
+https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
+
+------
+ e.g.
+------
+$ uname -r
+4.9.0-13-amd64
+
+$ uname --all
+Linux gonzo 4.9.0-13-amd64 #1 SMP Debian 4.9.228-1 (2020-07-05) x86_64 GNU/Linux
+
+$ lsb_release --all
+No LSB modules are available.
+Distributor ID: Debian
+Description:    Debian GNU/Linux 9.13 (stretch)
+Release:        9.13
+Codename:       stretch
+
+----------------------------------------
+ From the directory containing cp210x.c
+----------------------------------------
+make
+sudo chown root:root cp210x.ko
+sudo modprobe --remove --verbose cp210x
+sudo cp /lib/modules/"$(uname -r)"/kernel/drivers/usb/serial/cp210x.ko  /lib/modules/"$(uname -r)"/kernel/drivers/usb/serial/cp210x.ko.ORIG1
+ls -l /lib/modules/"$(uname -r)"/kernel/drivers/usb/serial
+sudo cp cp210x.ko /lib/modules/"$(uname -r)"/kernel/drivers/usb/serial
+make clean
+
+cd /lib/modules/"$(uname -r)"/kernel/drivers/usb/serial
+#sudo modprobe --verbose usbserial
+sudo modprobe --verbose cp210x
+
+sudo dmesg --human --reltime | tail
+
+sudo modinfo usbserial
+sudo modinfo cp210x

@@ -165,7 +165,14 @@ class Zones {
       return changed;
     }
 
-    uint8_t asBitMap8() {
+    bool isZoneOn(unsigned zoneIndex) const {
+      if (!isValidZoneIndex(zoneIndex)) {
+        return false;
+      }
+      return zones[zoneIndex].isZoneOn();
+    }
+
+    uint8_t asBitMap8() const {
       uint8_t result = 0;
       for (unsigned loopIndex = 0; loopIndex < numberOfZones; ++loopIndex) {
         if (zones[loopIndex].isZoneOn()) {
@@ -226,8 +233,8 @@ class Zones {
     }
 
   private:
-    const unsigned numberOfZones;
     ZoneStatus *zones;
+    const unsigned numberOfZones;
     /**
     static const unsigned numberOfZones = NUM_OF_ZONES;
     ZoneStatus zones[numberOfZones] {
@@ -237,7 +244,7 @@ class Zones {
     };
     **/
 
-    bool isValidZoneIndex(unsigned zoneIndex) {
+    bool isValidZoneIndex(unsigned zoneIndex) const {
       //TODO: log a warning if invalid.
       return (zoneIndex < numberOfZones);
     }

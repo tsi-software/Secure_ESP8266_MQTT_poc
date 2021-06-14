@@ -30,6 +30,7 @@ I’m going to defer to two other web sites that do an excellent job of describi
 Connect you development computer to the ATmega168 as described above.
 Then, from this "avr_spi_slave" directory, run:
 ```bash
+make test_conn
 make program_fuses
 make program
 ```
