@@ -19,6 +19,8 @@ gap = 0.5;
 small_gap = 0.12;
 omega = 0.001;
 
+base_corner_radius = 1;
+
 
 relay_board_width = 1.72;
 controller_board_width = 4.0;
@@ -80,9 +82,27 @@ module lower_enclosure() {
             translate([0, 0, lower_enclosure_inside.z/2]) {
                 difference() {
                     translate([0, 0, -(wallWidth/2 + omega)]) {
-                        cube(lower_enclosure_outside, center = true);
+                        roundedCube(
+                            size = lower_enclosure_outside,
+                            r = base_corner_radius,
+                            sidesonly = false,
+                            center = true,
+                            $fn = fn_High
+                        );
                     }
-                    cube(lower_enclosure_inside, center = true);
+                    translate([0, 0, base_corner_radius]) {
+                        roundedCube(
+                            size = [
+                                lower_enclosure_inside.x,
+                                lower_enclosure_inside.y,
+                                lower_enclosure_inside.z + base_corner_radius*2
+                            ],
+                            r = base_corner_radius,
+                            sidesonly = false,
+                            center = true,
+                            $fn = fn_Low
+                        );
+                    }//translate
                 }//difference
             }//translate
 
