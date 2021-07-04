@@ -5,7 +5,7 @@ use </home/wtaylor/data/openscad/MCAD/boxes.scad>
 
 cli_fn = 32; // This value can be changed by the command line.
 $fn = cli_fn;
-fn_Low  = 12; //32;
+fn_Low  = 32;
 fn_Med  = fn_Low * 2;
 fn_High = fn_Low * 4;
 
@@ -49,10 +49,14 @@ support_rail = [
 ];
 
 
+lock_screw_hole_diameter = 5.5;
+lock_screw_hole_radius = lock_screw_hole_diameter/2;
+lock_screw_hole_offset = 10;
+
 upper_enclosure_inside = [
     lower_enclosure_outside.x + gap*2,
     lower_enclosure_outside.y + gap*2,
-    lower_enclosure_outside.z + gap*2
+    lower_enclosure_outside.z + gap*2 + lock_screw_hole_offset + lock_screw_hole_diameter + supportWidth
 ];
 upper_enclosure_outside = [
     upper_enclosure_inside.x + wallWidth*2,
@@ -170,6 +174,7 @@ module upper_enclosure() {
                     }
                 }
             }
+            //++ difference ++
             translate([0, 0, base_corner_radius]) {
                 // inside
                 roundedCube(
@@ -183,6 +188,21 @@ module upper_enclosure() {
                     center = true,
                     $fn = fn_Low
                 );
+
+                // Lock Screw holes.
+                translate([0, 0, upper_enclosure_inside.z/2 - lock_screw_hole_diameter - supportWidth])
+                rotate([0,90,0])
+                {
+                    cylinder(
+                        r = lock_screw_hole_radius,
+                        h = upper_enclosure_outside.x*1.5,
+                        center = true,
+                        $fn = fn_High
+                    );
+                    //lock_screw_hole_radius
+                    //lock_screw_hole_offset
+                }
+
             }//translate
         }//difference
     }//translate
@@ -226,6 +246,7 @@ module hanger() {
                         //
                     } else {
                         rotate([-90, 0, 0]) {
+                            //TODO: use a donut here instead of a cylinder.
                             cylinder(
                                 r1 = hanger_offset_r1,
                                 r2 = hanger_offset_r2,
@@ -238,7 +259,7 @@ module hanger() {
                 }//translate
             }//for
         }//hull
-    //++ difference ++
+        //++ difference ++
         for (ndx = [0 : len(hanger_centers)-1]) {
             translate(hanger_centers[ndx]) {
                 if (ndx == 0) {
