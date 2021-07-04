@@ -5,7 +5,7 @@ use </home/wtaylor/data/openscad/MCAD/boxes.scad>
 
 cli_fn = 32; // This value can be changed by the command line.
 $fn = cli_fn;
-fn_Low  = 32;
+fn_Low  = 12; //32;
 fn_Med  = fn_Low * 2;
 fn_High = fn_Low * 4;
 
@@ -48,16 +48,28 @@ support_rail = [
     min(relay_board.y, controller_board.y),
 ];
 
+
 upper_enclosure_inside = [
-    0,
-    0,
-    0
+    lower_enclosure_outside.x + gap*2,
+    lower_enclosure_outside.y + gap*2,
+    lower_enclosure_outside.z + gap*2
 ];
+upper_enclosure_outside = [
+    upper_enclosure_inside.x + wallWidth*2,
+    upper_enclosure_inside.y + wallWidth*2,
+    upper_enclosure_inside.z + wallWidth*1,
+];
+hangerWidth = supportWidth;
 
 
+translate([0, -lower_enclosure_outside.y*0.6, 0]) {
+    lower_enclosure();
+}
 
-lower_enclosure();
-//circuit_boards();
+translate([0, upper_enclosure_outside.y*0.6, 0]) {
+    upper_enclosure();
+}
+
 
 
 module circuit_boards() {
@@ -138,5 +150,110 @@ module lower_enclosure() {
 
 
 module upper_enclosure() {
+    // Outside & Inside walls of upper enclosure.
+    translate([0, 0, upper_enclosure_inside.z/2])
+    //rotate([0,180,0]) //JUST TESTING!!!
+    {
+        difference() {
+            translate([0, 0, -(wallWidth/2 + omega)]) {
+                union() {
+                    // outside
+                    roundedCube(
+                        size = upper_enclosure_outside,
+                        r = base_corner_radius + gap,
+                        sidesonly = false,
+                        center = true,
+                        $fn = fn_High
+                    );
+                    translate([0, -upper_enclosure_outside.y*0.5, -upper_enclosure_inside.z/2]) {
+                        hanger();
+                    }
+                }
+            }
+            translate([0, 0, base_corner_radius]) {
+                // inside
+                roundedCube(
+                    size = [
+                        upper_enclosure_inside.x,
+                        upper_enclosure_inside.y,
+                        upper_enclosure_inside.z + base_corner_radius*2
+                    ],
+                    r = base_corner_radius + gap,
+                    sidesonly = false,
+                    center = true,
+                    $fn = fn_Low
+                );
+            }//translate
+        }//difference
+    }//translate
+}
 
+
+module hanger() {
+    screw_cap_diameter = 6;
+    screw_cap_radius = screw_cap_diameter/2;
+    screw_thread_diameter = 4;
+    screw_thread_radius = screw_thread_diameter/2;
+
+    hanger_offset_r1 = screw_cap_radius + supportWidth; // + hangerWidth; //+hangerWidth to create a bevel.
+    hanger_offset_r2 = screw_cap_radius + supportWidth;
+
+    hanger_centers = [
+        [
+            upper_enclosure_outside.x*0.5,
+            0,
+            upper_enclosure_outside.z*0.66
+        ],
+        [
+            upper_enclosure_outside.x + hanger_offset_r1 + wallWidth,
+            0,
+            hanger_offset_r1+base_corner_radius
+        ],
+        [
+            0 - (hanger_offset_r1 + wallWidth),
+            0,
+            hanger_offset_r1+base_corner_radius
+        ],
+    ];
+
+    translate([-hanger_centers[0].x, hangerWidth/2, 0])
+    difference()
+    {
+        hull() {
+            for (ndx = [0 : len(hanger_centers)-1]) {
+                translate(hanger_centers[ndx]) {
+                    if (ndx == -1) {
+                        //
+                    } else {
+                        rotate([-90, 0, 0]) {
+                            cylinder(
+                                r1 = hanger_offset_r1,
+                                r2 = hanger_offset_r2,
+                                h = hangerWidth,
+                                center = true,
+                                $fn = fn_Low
+                            );
+                        }
+                    }//if-else
+                }//translate
+            }//for
+        }//hull
+    //++ difference ++
+        for (ndx = [0 : len(hanger_centers)-1]) {
+            translate(hanger_centers[ndx]) {
+                if (ndx == 0) {
+                    //
+                } else {
+                    rotate([-90, 0, 0]) {
+                        cylinder(
+                            r = screw_thread_radius,
+                            h = hangerWidth+1,
+                            center = true,
+                            $fn = fn_Low
+                        );
+                    }
+                }//if-else
+            }//translate
+        }//for
+    }//difference & translate
 }
