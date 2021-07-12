@@ -1,5 +1,5 @@
 # Secure ESP8266 MQTT Client
-*Copyright (c) 2019-2020 Warren Taylor.*
+*Copyright (c) 2019-2021 Warren Taylor.*
 
 There are many tutorials on how to program the ESP8266 as an MQTT Client using the Arduino libraries. But it's hard to find a single source clearly describing how to program the ESP8266 as a **secure** MQTT Client. As a long time software engineer I know how important security is these days.
 
@@ -64,11 +64,18 @@ This is application level code, which is independent of security and, therefore,
 ### Hardware Schematics
 ![Schematics](eagle_cad/Secure_ESP8266_MQTT_schematics.png)
 
-## Future Features
-### OTA (Over-the-Air) Updates
-Future versions of this ESP8266 MQTT Client will have secure OTA updates enabled.
-The **ESP8266** will be updated in a manner similar to that of the ArduinoOTA code but instead using the existing secure MQTT connection in order to keep memory use minimal.
-The **AVR SPI Slave** will be updated over-the-air by using the ESP8266 as an AVR ISP (In-System Programming) device. Again using the existing secure MQTT connection in order to keep memory use minimal.
+## Arduino Configuration
+### Arduino Board Manager
+The points here were taken from [arduino-esp8266 readthedocs](https://arduino-esp8266.readthedocs.io/en/latest/installing.html)
+
+* Run **Arduino** and open **Preference**
+* Enter *https://arduino.esp8266.com/stable/package_esp8266com_index.json* into Additional Board Manager URLs field.
+* Open **Boards Manager**, search for *esp8266*, and install the appropriate board and version. 
+
+### Arduino Library Manager
+Open the Arduino Library Manager and install the following libraries:
+
+* PubSubClient by Nick O'Leary
 
 ## MQTT Client References
 * <https://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/readme.html>
@@ -78,7 +85,13 @@ The **AVR SPI Slave** will be updated over-the-air by using the ESP8266 as an AV
 * <https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/src/WiFiClientSecureBearSSL.h>
 * <https://pubsubclient.knolleary.net/>
 
-## cp210x driver
+## Future Features
+### OTA (Over-the-Air) Updates
+Future versions of this ESP8266 MQTT Client will have secure OTA updates enabled.
+The **ESP8266** will be updated in a manner similar to that of the ArduinoOTA code but instead using the existing secure MQTT connection in order to keep memory use minimal.
+The **AVR SPI Slave** will be updated over-the-air by using the ESP8266 as an AVR ISP (In-System Programming) device. Again using the existing secure MQTT connection in order to keep memory use minimal.
+
+# cp210x USB Driver
 https://askubuntu.com/questions/941594/installing-cp210x-driver
 https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
 
