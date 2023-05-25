@@ -30,7 +30,7 @@ quit -- ctrl-A k
 ~/bin/arduino-1.8.8/arduino  --verify  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
 ~/bin/arduino-1.8.8/arduino  --upload  ~/github/tsi-software/Secure_ESP8266_MQTT_poc/top-level-components/secure_esp8266_mqtt_client/secure_esp8266_mqtt_client.ino
 
-~/bin/arduino-1.8.8/arduino --verbose --upload secure_esp8266_mqtt_client.ino
+~/bin2/arduino-1.8.15/arduino --verbose --upload secure_esp8266_mqtt_client.ino
 */
 
 #define MAJOR_VER "00"

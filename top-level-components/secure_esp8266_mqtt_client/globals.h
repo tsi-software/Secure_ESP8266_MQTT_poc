@@ -10,9 +10,9 @@
 #define GLOBALS_H_
 
 
-#ifndef DEBUG
-#define DEBUG
-#endif
+//#ifndef DEBUG
+//#define DEBUG
+//#endif
 
 
 #ifdef DEBUG

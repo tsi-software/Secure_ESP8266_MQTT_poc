@@ -53,3 +53,19 @@ Finally, update Debian 9 to Debian 10 buster by running:
   sudo apt --purge autoremove
 Reboot the Linux system so that you can boot into Debian 10 Buster
 
+
+------------
+ 2021-07-11
+------------
+git stash push -m local-credential-file
+
+
+# http://corntab.com/
+# At 00 minutes past 6:00, 12:00, 16:00, and 23:00
+0 6,12,16,23 * * *
+
+# https://crontab-generator.org/
+0 6,12,16,23 * * * mqtt --arg1 >/dev/null 2>&1
+
+# https://crontab.guru/
+# Good for verifying.
