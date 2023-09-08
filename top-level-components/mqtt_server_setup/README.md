@@ -1,5 +1,5 @@
 # MQTT Broker secure setup
-*Copyright (c) 2019-2020 Warren Taylor.*
+*Copyright (c) 2019-2023 Warren Taylor.*
 
 Here are the basics of how to install, configure, and secure the “Mosquitto” MQTT Broker on an already properly configured and running installation of [OpenWRT](https://openwrt.org/). However, the MQTT Broker can run on any computer on a local area network (LAN). You could even run it on a Raspberry PI if performance isn’t a strict requirement. So the following instruction should be adaptable to most modern operating systems.
 
@@ -128,8 +128,39 @@ service mosquitto start
 The following command should turn on zone 2 for 2 minutes (i.e. 120 seconds).
 Try running it now, even if the MQTT client has not yet been setup, in order to check for any errors that may occur on the server side.
 ```bash
-mosquitto_pub -h your-hostname -p 8883 --cafile mosq_ca.crt --cert mosq_serv.crt --key mosq_serv.key --debug --topic irrigation/zone/on -m "2 120"
+mosquitto_pub -h your-hostname -p 8883 \
+    --cafile mosq_ca.crt --cert mosq_serv.crt --key mosq_serv.key \
+    --debug --topic irrigation/zone/on -m "2 120"
 ```
+
+### Error: The connection was refused.
+If you are using a newer version of the Mosquitto Broker
+you may get the following error messages:
+```
+Client (null) sending CONNECT
+Client (null) received CONNACK (5)
+Connection error: Connection Refused: not authorised.
+Error: The connection was refused.
+```
+The quick solution is to update **mosquitto.conf** with the following line
+and then Restart the Mosquitto Broker:
+```
+allow_anonymous true
+```
+However, this solution is a "double edge sword".
+Sure, it gets things running but you may now be less secure than you require.
+A more complicated configuration could include:
+```
+...
+allow_anonymous false
+use_identity_as_username true
+...
+```
+Or even require user name and password in addition to using security certificates and keys.
+
+There are many more Mosquitto Security related configuration settings but
+I cannot tell you what to do because everyones security requirements are different
+and these are getting into complicated configurations that are beyond the scope of this project.
 
 ## MQTT Server References
 * <https://manpages.debian.org/stretch/mosquitto/mosquitto-tls.7.en.html>

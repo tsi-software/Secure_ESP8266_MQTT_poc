@@ -69,3 +69,26 @@ git stash push -m local-credential-file
 
 # https://crontab.guru/
 # Good for verifying.
+
+
+------------
+ 2023-09-07
+------------
+References:
+http://www.steves-internet-guide.com/mosquitto-tls/
+http://www.steves-internet-guide.com/using-lets-encrypt-certificate-mosquitto/
+http://www.steves-internet-guide.com/creating-and-using-client-certificates-with-mqtt-and-mosquitto/
+https://mosquitto.org/man/mosquitto-tls-7.html
+https://github.com/eclipse/mosquitto/blob/master/README-letsencrypt.md
+
+-----------------------------------
+Error: The connection was refused.
+-----------------------------------
+mosquitto.conf
+allow_anonymous true
+
+https://github.com/tsi-software/Secure_ESP8266_MQTT_poc/tree/master/top-level-components/mqtt_server_setup#run-a-quick-test
+
+Git Commit message:
+Mosquitto config: allow_anonymous true
+Update to version 0.0.4 and update copyright notices.
