@@ -49,8 +49,7 @@ quit -- ctrl-A k
 
 //TODO: implement secure credentials as a runtime config file
 //      rather than a header file.
-#include "/home/wtaylor/private/Secure_ESP8266_MQTT/secure_credentials.h"
-//#include "secure_credentials.h"
+#include "secure_credentials.h"
 
 SetupWifi setupWifi(
     STASSID, STAPSK,
